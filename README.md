@@ -3,8 +3,18 @@
 An original, cross-platform countdown timer that recreates the simple, direct
 gesture of the classic Android Ovo timer: choose a duration around the dial,
 release, and let the countdown run. This implementation is intentionally
-independent: it includes no original Ovo source code, screenshots, or
-proprietary artwork and is not affiliated with Ilumbo.
+independent: it includes no original Ovo source code or proprietary artwork
+and is not affiliated with Ilumbo.
+
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/ovo-idle.png" alt="Ovo Timer idle at 25 minutes" width="31%" />
+  <img src="docs/screenshots/ovo-running.png" alt="Ovo Timer counting down" width="31%" />
+  <img src="docs/screenshots/ovo-paused.png" alt="Ovo Timer paused with time remaining" width="31%" />
+</p>
+
+<p align="center"><em>Idle · Running · Paused</em></p>
 
 ## What it does
 
