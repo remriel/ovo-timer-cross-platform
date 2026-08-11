@@ -9,8 +9,16 @@ import {
   timerProgress
 } from "./timer-engine.js";
 
+const nativePlatform = window.Capacitor?.getPlatform?.() || "web";
+if (nativePlatform === "android") {
+  document.documentElement.classList.add("native-android");
+}
+
 const storageKey = "ovo-timer-state-v1";
 const gestureThreshold = 6;
+const dragOuterPadding = 28;
+const notificationId = 41001;
+const notificationChannel = "ovo-alarm-v2";
 const refs = {
   dial: document.querySelector("#timerDial"),
   dialRim: document.querySelector("#dialRim"),
@@ -27,6 +35,8 @@ let endTime = 0;
 let intervalId = 0;
 let phase = "idle";
 let dialGesture = null;
+let nativeAlarmRequest = 0;
+let nativeAlarmScheduled = false;
 
 function saveState() {
   const snapshot = {
@@ -59,6 +69,7 @@ function restoreState() {
       if (remainingSeconds > 0) {
         phase = "running";
         startInterval();
+        void scheduleNativeAlarm();
       } else {
         phase = "finished";
       }
@@ -133,7 +144,101 @@ function startInterval() {
   intervalId = window.setInterval(tick, 200);
 }
 
+function nativeLocalNotifications() {
+  if (nativePlatform !== "android") {
+    return null;
+  }
+
+  return window.capacitorLocalNotifications?.LocalNotifications
+    ?? window.Capacitor?.Plugins?.LocalNotifications
+    ?? null;
+}
+
+async function ensureNativeAlarmReady() {
+  const plugin = nativeLocalNotifications();
+  if (!plugin) {
+    return null;
+  }
+
+  try {
+    const permission = await plugin.checkPermissions?.();
+    if (permission?.display && permission.display !== "granted") {
+      const requested = await plugin.requestPermissions?.();
+      if (requested?.display && requested.display !== "granted") {
+        return null;
+      }
+    }
+
+    await plugin.createChannel?.({
+      id: notificationChannel,
+      name: "Ovo alarms",
+      description: "Countdown alarm alerts",
+      importance: 5,
+      sound: "ovo_alarm.wav",
+      vibration: true,
+      lights: true,
+      lightColor: "#FFD30A"
+    });
+    return plugin;
+  } catch {
+    return null;
+  }
+}
+
+async function cancelNativeAlarm() {
+  nativeAlarmRequest += 1;
+  nativeAlarmScheduled = false;
+  const plugin = nativeLocalNotifications();
+  if (!plugin) {
+    return;
+  }
+
+  try {
+    await plugin.cancel({ notifications: [{ id: notificationId }] });
+  } catch {
+    // The timer remains usable if notification cancellation is unavailable.
+  }
+}
+
+async function scheduleNativeAlarm() {
+  const request = ++nativeAlarmRequest;
+  const plugin = await ensureNativeAlarmReady();
+  if (!plugin || phase !== "running" || !endTime || request !== nativeAlarmRequest) {
+    return;
+  }
+
+  try {
+    await plugin.cancel({ notifications: [{ id: notificationId }] });
+    if (phase !== "running" || !endTime || request !== nativeAlarmRequest) {
+      return;
+    }
+
+    await plugin.schedule({
+      notifications: [{
+        id: notificationId,
+        title: "Ovo Timer",
+        body: "Time is up. Your countdown is complete.",
+        schedule: {
+          at: new Date(endTime),
+          allowWhileIdle: true
+        },
+        channelId: notificationChannel,
+        sound: "ovo_alarm.wav",
+        ongoing: false,
+        autoCancel: true
+      }]
+    });
+    nativeAlarmScheduled = true;
+  } catch {
+    // The foreground alarm and in-app status remain the fallback.
+  }
+}
+
 function requestNotificationPermission() {
+  if (nativeLocalNotifications()) {
+    return;
+  }
+
   if (window.ovoBridge || typeof Notification === "undefined") {
     return;
   }
@@ -160,6 +265,7 @@ function startTimer() {
   phase = "running";
   endTime = Date.now() + remainingSeconds * 1000;
   requestNotificationPermission();
+  void scheduleNativeAlarm();
   startInterval();
   saveState();
   tick();
@@ -174,12 +280,14 @@ function pauseTimer() {
   clearIntervalTimer();
   endTime = 0;
   phase = remainingSeconds > 0 ? "paused" : "finished";
+  void cancelNativeAlarm();
   saveState();
   render();
 }
 
 function resetTimer() {
   clearIntervalTimer();
+  void cancelNativeAlarm();
   endTime = 0;
   remainingSeconds = totalSeconds;
   phase = "idle";
@@ -190,6 +298,7 @@ function resetTimer() {
 function setTimer(seconds) {
   const safeSeconds = clamp(normalizeSeconds(seconds), MIN_SECONDS, MAX_SECONDS);
   clearIntervalTimer();
+  void cancelNativeAlarm();
   totalSeconds = safeSeconds;
   remainingSeconds = safeSeconds;
   endTime = 0;
@@ -215,22 +324,31 @@ function ringAlarm() {
     }
 
     const context = new AudioApi();
-    const gain = context.createGain();
-    gain.gain.setValueAtTime(0.0001, context.currentTime);
-    gain.connect(context.destination);
+    const master = context.createGain();
+    master.gain.setValueAtTime(0.13, context.currentTime);
+    master.connect(context.destination);
 
-    [0, 0.23, 0.46].forEach((offset, index) => {
+    const beepCount = 16;
+    const period = 0.34;
+    const duration = 0.22;
+    for (let index = 0; index < beepCount; index += 1) {
+      const offset = index * period;
+      const start = context.currentTime + offset;
+      const envelope = context.createGain();
+      envelope.gain.setValueAtTime(0.0001, start);
+      envelope.gain.exponentialRampToValueAtTime(1, start + 0.012);
+      envelope.gain.exponentialRampToValueAtTime(0.0001, start + duration - 0.012);
+      envelope.connect(master);
+
       const oscillator = context.createOscillator();
       oscillator.type = "square";
-      oscillator.frequency.setValueAtTime(index === 1 ? 880 : 660, context.currentTime + offset);
-      oscillator.connect(gain);
-      gain.gain.exponentialRampToValueAtTime(0.12, context.currentTime + offset + 0.01);
-      gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + offset + 0.17);
-      oscillator.start(context.currentTime + offset);
-      oscillator.stop(context.currentTime + offset + 0.19);
-    });
+      oscillator.frequency.setValueAtTime(index % 3 === 1 ? 880 : 660, start);
+      oscillator.connect(envelope);
+      oscillator.start(start);
+      oscillator.stop(start + duration);
+    }
 
-    window.setTimeout(() => context.close(), 900);
+    window.setTimeout(() => context.close(), 5600);
   } catch {
     // Audio is a nice-to-have, and the visual/native notification still lands.
   }
@@ -243,6 +361,24 @@ async function notifyFinished() {
   };
 
   try {
+    if (nativeLocalNotifications()) {
+      if (!nativeAlarmScheduled) {
+        const plugin = await ensureNativeAlarmReady();
+        await plugin?.schedule({
+          notifications: [{
+            id: notificationId,
+            title: details.title,
+            body: details.body,
+            channelId: notificationChannel,
+            sound: "ovo_alarm.wav",
+            ongoing: false,
+            autoCancel: true
+          }]
+        });
+      }
+      return;
+    }
+
     if (window.ovoBridge?.notify) {
       await window.ovoBridge.notify(details);
       return;
@@ -298,7 +434,7 @@ function dialPosition(event) {
 
   return {
     onClockFace: distance <= faceRadius + 1,
-    onProgressBand: distance > faceRadius + 1 && distance <= dialRadius + 1,
+    onProgressBand: distance > faceRadius + 1 && distance <= dialRadius + dragOuterPadding,
     degrees: Math.atan2(x, -y) * (180 / Math.PI)
   };
 }

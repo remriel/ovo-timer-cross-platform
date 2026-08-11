@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.1
+
+- Android now schedules a native alarm notification that can fire while the
+  app is backgrounded or the screen is locked.
+- Added a 5.6-second repeating alarm sound for Android and extended the
+  foreground Web Audio alarm to run for more than five seconds.
+- Removed the Android WebView frame and native button focus artifact so the
+  dial stays clean and edge-to-edge in dark mode.
+- Thickened the colored band and added an invisible outer touch cushion so
+  dragging is easier to start accurately on a phone.
+
 ## 1.0.0
 
 - First independent cross-platform release of Ovo Timer for Windows and Android.

@@ -1,6 +1,6 @@
 {
   "name": "ovo-timer-windows",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A bold, cross-platform Ovo Timer-inspired countdown timer for Windows and Android.",
   "private": true,
   "author": "Gev",
@@ -8,20 +8,22 @@
   "main": "src/main.js",
   "scripts": {
     "prepare:web": "node scripts/prepare-web.mjs",
+    "make:alarm-sound": "node scripts/make-alarm-wav.mjs",
     "make:ico": "node scripts/make-ico.mjs",
     "make:resources": "node scripts/prepare-resources.mjs",
     "start": "npm run prepare:web && electron .",
     "test:unit": "node --test",
     "check": "node --check src/main.js && node --check src/web/app.js && node --check src/web/timer-engine.js && npm run test:unit",
     "android:add": "cap add android",
-    "android:sync": "npm run prepare:web && cap sync android",
+    "android:sync": "npm run prepare:web && npm run make:alarm-sound && cap sync android",
     "android:icons": "npm run make:resources && capacitor-assets generate --android --iconBackgroundColor #1650FF --splashBackgroundColor #FFF8E8",
     "android:apk": "npm run android:sync && cd android && gradlew.bat assembleDebug",
     "build:windows": "npm run prepare:web && npm run make:ico && electron-builder --win nsis portable --x64"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.3",
-    "@capacitor/core": "^7.4.3"
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/local-notifications": "^7.0.7"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",

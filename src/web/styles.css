@@ -69,6 +69,30 @@ button {
   box-shadow: 12px 12px 0 var(--blue);
 }
 
+html.native-android,
+html.native-android body {
+  background: var(--deep);
+}
+
+html.native-android .poster-background {
+  display: none;
+}
+
+html.native-android .app-shell {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: calc(18px + env(safe-area-inset-top)) 18px calc(18px + env(safe-area-inset-bottom));
+  border: 0;
+  background: var(--deep);
+  box-shadow: none;
+}
+
+html.native-android .timer-layout {
+  min-height: calc(100vh - 36px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  padding: 0;
+}
+
 .timer-layout {
   display: grid;
   min-height: calc(100vh - 108px);
@@ -105,6 +129,15 @@ button {
   place-items: center;
 }
 
+.dial-rim::before {
+  position: absolute;
+  inset: -28px;
+  z-index: 0;
+  content: "";
+  border-radius: 50%;
+  touch-action: none;
+}
+
 .dial-rim.is-dragging .dial-progress {
   transform: rotate(-2deg) scale(1.02);
 }
@@ -122,20 +155,25 @@ button {
   cursor: pointer;
   touch-action: none;
   user-select: none;
+  -webkit-user-select: none;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
   background: transparent;
   place-items: center;
 }
 
+.timer-dial:focus,
 .timer-dial:focus-visible {
-  outline: 5px solid var(--yellow);
-  outline-offset: 9px;
+  outline: none;
 }
 
 .dial-progress {
   display: grid;
   width: 100%;
   aspect-ratio: 1;
-  padding: 14px;
+  padding: 20px;
   border: 5px solid var(--ink);
   border-radius: 50%;
   background: conic-gradient(from 0deg, var(--red) var(--progress), var(--paper) 0);
@@ -309,7 +347,7 @@ button {
   }
 
   .dial-progress {
-    padding: 10px;
+    padding: 16px;
     border-width: 4px;
     box-shadow: 8px 8px 0 var(--ink), -6px -6px 0 var(--pink);
   }

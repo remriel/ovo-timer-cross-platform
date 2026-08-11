@@ -15,16 +15,16 @@
         <div class="timer-panel">
           <div class="dial-zone">
             <div id="dialRim" class="dial-rim">
-              <button
+              <div
                 id="timerDial"
                 class="timer-dial"
-                type="button"
                 aria-label="Countdown clock"
                 aria-description="Tap the clock face to start or pause. Drag the colored progress band around its edge to choose a duration."
                 aria-valuemin="10"
                 aria-valuemax="3600"
                 aria-valuenow="1500"
                 aria-valuetext="25 minutes"
+                tabindex="0"
                 role="slider"
               >
                 <span class="dial-progress" id="dialProgress">
@@ -33,7 +33,7 @@
                     <span id="timerCaption" class="timer-caption">ON THE DIAL</span>
                   </span>
                 </span>
-              </button>
+              </div>
             </div>
           </div>
 
@@ -54,6 +54,8 @@
       </section>
 
     </main>
+    <script src="./vendor/capacitor.js"></script>
+    <script src="./vendor/local-notifications.js"></script>
     <script type="module" src="./app.js"></script>
   </body>
 </html>

@@ -13,8 +13,9 @@ proprietary artwork and is not affiliated with Ilumbo.
 - Tap the inner clock face to start or pause. Releasing a progress-band drag
   starts the newly selected countdown; Space pauses/resumes and R resets.
 - Choose 1, 5, 15, 25, or 45-minute presets.
-- Receive an audible finish cue and a native desktop notification where
-  available.
+- Receive a 5+ second audible finish alarm. Android also schedules a native
+  notification that can fire while the app is backgrounded or the screen is
+  locked (allow notification permission when prompted).
 - Run the exact same responsive experience on Windows and Android.
 
 ## Build
