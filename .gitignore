@@ -1,0 +1,13 @@
+node_modules/
+www/
+release/
+resources/
+.playwright-cli/
+assets/icon.png
+assets/*.ico
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+.DS_Store
+*.log

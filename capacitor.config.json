@@ -1,0 +1,8 @@
+{
+  "appId": "com.remriel.ovotimer",
+  "appName": "Ovo Timer",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}

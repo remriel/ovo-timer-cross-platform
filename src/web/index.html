@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1650ff" />
+    <title>Ovo Timer</title>
+    <link rel="icon" type="image/png" href="./assets/ovo-icon.png" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="poster-background" aria-hidden="true"></div>
+    <main class="app-shell">
+      <section class="timer-layout" aria-label="Countdown timer">
+        <div class="timer-panel">
+          <div class="dial-zone">
+            <div id="dialRim" class="dial-rim">
+              <button
+                id="timerDial"
+                class="timer-dial"
+                type="button"
+                aria-label="Countdown clock"
+                aria-description="Tap the clock face to start or pause. Drag the colored progress band around its edge to choose a duration."
+                aria-valuemin="10"
+                aria-valuemax="3600"
+                aria-valuenow="1500"
+                aria-valuetext="25 minutes"
+                role="slider"
+              >
+                <span class="dial-progress" id="dialProgress">
+                  <span class="dial-face">
+                    <span id="timerValue" class="timer-value">25:00</span>
+                    <span id="timerCaption" class="timer-caption">ON THE DIAL</span>
+                  </span>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <p id="liveStatus" class="live-status visually-hidden" aria-live="polite">25 minutes is loaded.</p>
+        </div>
+
+        <aside class="side-panel" aria-label="Quick time shortcuts">
+          <section class="side-section">
+            <div class="preset-grid">
+              <button class="preset preset-blue" data-minutes="1" type="button">01<br /><span>MIN</span></button>
+              <button class="preset preset-yellow" data-minutes="5" type="button">05<br /><span>MIN</span></button>
+              <button class="preset preset-pink" data-minutes="15" type="button">15<br /><span>MIN</span></button>
+              <button class="preset preset-green" data-minutes="25" type="button">25<br /><span>MIN</span></button>
+              <button class="preset preset-red" data-minutes="45" type="button">45<br /><span>MIN</span></button>
+            </div>
+          </section>
+        </aside>
+      </section>
+
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,74 @@
+{
+  "name": "ovo-timer-windows",
+  "version": "1.0.0",
+  "description": "A bold, cross-platform Ovo Timer-inspired countdown timer for Windows and Android.",
+  "private": true,
+  "author": "Gev",
+  "type": "module",
+  "main": "src/main.js",
+  "scripts": {
+    "prepare:web": "node scripts/prepare-web.mjs",
+    "make:ico": "node scripts/make-ico.mjs",
+    "make:resources": "node scripts/prepare-resources.mjs",
+    "start": "npm run prepare:web && electron .",
+    "test:unit": "node --test",
+    "check": "node --check src/main.js && node --check src/web/app.js && node --check src/web/timer-engine.js && npm run test:unit",
+    "android:add": "cap add android",
+    "android:sync": "npm run prepare:web && cap sync android",
+    "android:icons": "npm run make:resources && capacitor-assets generate --android --iconBackgroundColor #1650FF --splashBackgroundColor #FFF8E8",
+    "android:apk": "npm run android:sync && cd android && gradlew.bat assembleDebug",
+    "build:windows": "npm run prepare:web && npm run make:ico && electron-builder --win nsis portable --x64"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/core": "^7.4.3"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^7.4.3",
+    "electron": "^35.0.3",
+    "electron-builder": "^26.0.12",
+    "png-to-ico": "^3.0.1"
+  },
+  "build": {
+    "appId": "com.remriel.ovotimer",
+    "productName": "Ovo Timer",
+    "directories": {
+      "output": "release/windows"
+    },
+    "files": [
+      "src/main.js",
+      "src/preload.cjs",
+      "www/**/*",
+      "package.json"
+    ],
+    "win": {
+      "icon": "assets/ovo-icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "artifactName": "OvoTimer-Setup-${version}-${arch}.${ext}",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Ovo Timer"
+    },
+    "portable": {
+      "artifactName": "OvoTimer-Portable-${version}-${arch}.${ext}"
+    }
+  }
+}
