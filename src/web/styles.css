@@ -211,7 +211,7 @@ html.native-android .timer-layout {
 
 .timer-value {
   font-family: Arial Black, Impact, Arial, sans-serif;
-  font-size: clamp(3.1rem, 8.6vw, 5.8rem);
+  font-size: clamp(4.03rem, 11.18vw, 7.54rem);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.055em;
   line-height: 0.82;
@@ -223,19 +223,19 @@ html.native-android .timer-layout {
   margin-top: 14px;
   letter-spacing: 0.055em;
   color: var(--blue);
-  font-size: clamp(0.63rem, 1.5vw, 0.82rem);
+  font-size: clamp(0.82rem, 1.95vw, 1.07rem);
 }
 
 .side-panel {
   width: min(100%, 820px);
   justify-self: center;
-  border: 5px solid var(--line);
-  background: var(--paper);
-  box-shadow: var(--shadow);
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .side-section {
-  padding: 12px 14px;
+  padding: 0;
 }
 
 .preset-grid {
@@ -252,7 +252,7 @@ html.native-android .timer-layout {
   letter-spacing: 0.045em;
   color: var(--ink);
   box-shadow: 4px 4px 0 var(--ink);
-  font-size: 1.12rem;
+  font-size: 1.46rem;
   line-height: 0.72;
   transition: transform 90ms ease, box-shadow 90ms ease;
 }
@@ -276,7 +276,7 @@ html.native-android .timer-layout {
 
 .preset span {
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 0.52rem;
+  font-size: 0.68rem;
   font-weight: 900;
   letter-spacing: 0.08em;
 }
@@ -318,7 +318,7 @@ html.native-android .timer-layout {
   }
 
   .side-panel {
-    box-shadow: 8px 8px 0 var(--ink);
+    box-shadow: none;
   }
 }
 
@@ -358,7 +358,7 @@ html.native-android .timer-layout {
   }
 
   .side-section {
-    padding: 12px;
+    padding: 0;
   }
 
   .preset-grid {

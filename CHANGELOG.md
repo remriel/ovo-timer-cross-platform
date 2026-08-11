@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2
+
+- Increased every visible timer, caption, shortcut, and unit label by 30% for
+  easier reading at a glance.
+
 ## 1.0.1
 
 - Android now schedules a native alarm notification that can fire while the
