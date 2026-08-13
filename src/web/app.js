@@ -6,7 +6,8 @@ import {
   formatClock,
   normalizeSeconds,
   remainingFromEndTime,
-  secondsForAngle,
+  secondsAfterDialRotation,
+  shortestAngleDelta,
   timerProgress
 } from "./timer-engine.js";
 
@@ -44,9 +45,12 @@ let nativeAlarmScheduled = false;
 
 if (nativePlatform === "android") {
   // Android WebView can retain a blue accessibility/focus frame on slider-like
-  // elements after a touch. The dial is operated through pointer gestures,
-  // so it stays out of the Android focus order while desktop keyboard support remains.
+  // elements after a touch. The square rim owns the pointer handlers, so both
+  // it and the circular face must opt out of Android's touch highlight.
   refs.dial.setAttribute("tabindex", "-1");
+  document.documentElement.style.setProperty("-webkit-tap-highlight-color", "transparent", "important");
+  refs.dialRim.style.setProperty("-webkit-tap-highlight-color", "transparent", "important");
+  refs.dial.style.setProperty("-webkit-tap-highlight-color", "transparent", "important");
 }
 
 function applyTheme(theme) {
@@ -585,6 +589,8 @@ function handleDialPointerDown(event) {
     pointerId: event.pointerId,
     startX: event.clientX,
     startY: event.clientY,
+    lastDegrees: position.degrees,
+    selectedSeconds: totalSeconds,
     changedTime: false
   };
   refs.dialRim.setPointerCapture?.(event.pointerId);
@@ -601,7 +607,14 @@ function handleDialPointerMove(event) {
 
   dialGesture.changedTime = true;
   refs.dialRim.classList.add("is-dragging");
-  setTimer(secondsForAngle(dialPosition(event).degrees));
+  const currentDegrees = dialPosition(event).degrees;
+  const deltaDegrees = shortestAngleDelta(dialGesture.lastDegrees, currentDegrees);
+  dialGesture.lastDegrees = currentDegrees;
+  dialGesture.selectedSeconds = secondsAfterDialRotation(
+    dialGesture.selectedSeconds,
+    deltaDegrees
+  );
+  setTimer(dialGesture.selectedSeconds);
 }
 
 function cancelDialGesture() {

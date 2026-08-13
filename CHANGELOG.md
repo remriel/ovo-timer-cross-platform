@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.5
+
+- Removed Android's remaining blue tap rectangle from the square rim that owns
+  the dial gesture, as well as from the circular clock face.
+- Changed rim dragging to continuous two-lap movement: one full turn adds 30
+  minutes, 60 minutes is a hard stop, and reversing immediately reduces time
+  instead of wrapping back to the beginning.
+
 ## 1.0.4
 
 - Replaced Android's standard timer notification with a dedicated native alarm

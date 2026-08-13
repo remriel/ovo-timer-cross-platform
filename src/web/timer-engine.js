@@ -1,5 +1,6 @@
 export const MAX_SECONDS = 60 * 60;
 export const MIN_SECONDS = 10;
+export const DIAL_REVOLUTION_SECONDS = 30 * 60;
 
 export function clamp(value, minimum, maximum) {
   return Math.min(Math.max(value, minimum), maximum);
@@ -17,6 +18,23 @@ export function secondsForAngle(degrees) {
   const normalized = ((degrees % 360) + 360) % 360;
   const seconds = Math.round((normalized / 360) * MAX_SECONDS);
   return clamp(seconds === 0 ? MAX_SECONDS : seconds, MIN_SECONDS, MAX_SECONDS);
+}
+
+export function shortestAngleDelta(previousDegrees, currentDegrees) {
+  if (!Number.isFinite(previousDegrees) || !Number.isFinite(currentDegrees)) {
+    return 0;
+  }
+
+  return ((currentDegrees - previousDegrees + 540) % 360) - 180;
+}
+
+export function secondsAfterDialRotation(seconds, deltaDegrees) {
+  if (!Number.isFinite(seconds) || !Number.isFinite(deltaDegrees)) {
+    return clamp(normalizeSeconds(seconds), MIN_SECONDS, MAX_SECONDS);
+  }
+
+  const secondsPerDegree = DIAL_REVOLUTION_SECONDS / 360;
+  return clamp(seconds + deltaDegrees * secondsPerDegree, MIN_SECONDS, MAX_SECONDS);
 }
 
 export function formatClock(seconds) {

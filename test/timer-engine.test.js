@@ -6,7 +6,9 @@ import {
   formatClock,
   normalizeSeconds,
   remainingFromEndTime,
+  secondsAfterDialRotation,
   secondsForAngle,
+  shortestAngleDelta,
   timerProgress
 } from "../src/web/timer-engine.js";
 
@@ -27,6 +29,20 @@ test("maps dial positions to a 10-second through 60-minute range", () => {
   assert.equal(secondsForAngle(180), 1800);
   assert.equal(secondsForAngle(-90), 2700);
   assert.equal(secondsForAngle(1), 10);
+});
+
+test("tracks continuous dial turns across the top of the clock", () => {
+  assert.equal(shortestAngleDelta(179, -179), 2);
+  assert.equal(shortestAngleDelta(-179, 179), -2);
+  assert.equal(shortestAngleDelta(-1, 1), 2);
+});
+
+test("uses thirty minutes per turn and hard-stops at sixty minutes", () => {
+  assert.equal(secondsAfterDialRotation(25 * 60, 360), 55 * 60);
+  assert.equal(secondsAfterDialRotation(55 * 60, 360), MAX_SECONDS);
+  assert.equal(secondsAfterDialRotation(MAX_SECONDS, 90), MAX_SECONDS);
+  assert.equal(secondsAfterDialRotation(MAX_SECONDS, -1), MAX_SECONDS - 5);
+  assert.equal(secondsAfterDialRotation(10, -90), 10);
 });
 
 test("calculates remaining seconds from a stable end timestamp", () => {

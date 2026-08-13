@@ -94,6 +94,13 @@ html.native-android body {
   background: var(--deep);
 }
 
+html.native-android,
+html.native-android *,
+html.native-android *::before,
+html.native-android *::after {
+  -webkit-tap-highlight-color: transparent !important;
+}
+
 html.native-android .poster-background {
   display: none;
 }
@@ -113,6 +120,11 @@ html.native-android .timer-layout {
   padding: 0;
 }
 
+html.native-android .dial-rim,
+html.native-android .dial-rim:active,
+html.native-android .dial-rim:focus,
+html.native-android .dial-rim:focus-visible,
+html.native-android .dial-rim *,
 html.native-android .timer-dial,
 html.native-android .timer-dial:focus,
 html.native-android .timer-dial:focus-visible,
@@ -121,10 +133,12 @@ html.native-android .timer-dial * {
   outline: none !important;
 }
 
+html.native-android .dial-rim,
 html.native-android .timer-dial {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
+  cursor: default;
 }
 
 .timer-layout {
