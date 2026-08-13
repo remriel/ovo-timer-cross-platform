@@ -14,6 +14,19 @@ test("offers the exact requested quick-load durations", () => {
   assert.deepEqual(minutes, [1, 2, 3, 5, 10, 15, 20, 30, 45]);
 });
 
+test("starts a countdown immediately after a preset is selected", () => {
+  assert.match(app, /function startPresetTimer\(seconds\)/);
+  assert.match(app, /return startLoadedTimer\(setTimer\(seconds\)\)/);
+  assert.match(app, /void startPresetTimer\(Number\(button\.dataset\.minutes\) \* 60\)/);
+  assert.match(html, /aria-label="One-tap countdown shortcuts"/);
+});
+
+test("starts a manually dragged duration whenever the pointer gesture ends", () => {
+  assert.match(app, /dialGesture\.cancellation = cancelNativeAlarm\(\)/);
+  assert.match(app, /void startLoadedTimer\(startRequest\)/);
+  assert.match(app, /addEventListener\("pointercancel", finishDialGesture\)/);
+});
+
 test("keeps the application permanently dark", () => {
   assert.doesNotMatch(html, /themeToggle|Switch to light mode/);
   assert.doesNotMatch(app, /themeStorageKey|restoreTheme|toggleTheme|applyTheme/);

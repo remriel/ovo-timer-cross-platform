@@ -25,7 +25,8 @@ and is not affiliated with Ilumbo.
 - Tap the inner clock face to start or pause. Releasing a progress-band drag
   starts the newly selected countdown; Space pauses/resumes and R resets.
 - Choose 1, 2, 3, 5, 10, 15, 20, 30, or 45-minute presets from a compact
-  three-by-three shortcut grid.
+  three-by-three shortcut grid. Selecting any preset immediately starts its
+  countdown; no second tap on the dial is needed.
 - Receive a 5+ second audible finish alarm. Android also schedules a native
   full-screen alarm that can wake the display while the app is backgrounded
   or the screen is locked. It loops alarm-volume sound and vibration until you

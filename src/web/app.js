@@ -230,7 +230,7 @@ async function requestNativeAlarmPriorityAccess() {
 }
 
 async function cancelNativeAlarm() {
-  nativeAlarmRequest += 1;
+  const request = ++nativeAlarmRequest;
   nativeAlarmScheduled = false;
 
   const alarm = nativeOvoAlarm();
@@ -244,7 +244,7 @@ async function cancelNativeAlarm() {
 
   const plugin = nativeLocalNotifications();
   if (!plugin) {
-    return;
+    return request;
   }
 
   try {
@@ -252,6 +252,8 @@ async function cancelNativeAlarm() {
   } catch {
     // The timer remains usable if notification cancellation is unavailable.
   }
+
+  return request;
 }
 
 async function scheduleNativeAlarm() {
@@ -368,16 +370,40 @@ function resetTimer() {
   render();
 }
 
-function setTimer(seconds) {
+function loadTimer(seconds) {
   const safeSeconds = clamp(normalizeSeconds(seconds), MIN_SECONDS, MAX_SECONDS);
   clearIntervalTimer();
-  void cancelNativeAlarm();
   totalSeconds = safeSeconds;
   remainingSeconds = safeSeconds;
   endTime = 0;
   phase = "idle";
   saveState();
   render();
+  return safeSeconds;
+}
+
+function setTimer(seconds) {
+  const cancellation = cancelNativeAlarm();
+  const safeSeconds = loadTimer(seconds);
+  return { cancellation, safeSeconds };
+}
+
+async function startLoadedTimer({ cancellation, safeSeconds }) {
+  const cancellationRequest = await cancellation;
+
+  if (
+    cancellationRequest !== nativeAlarmRequest
+    || phase !== "idle"
+    || totalSeconds !== safeSeconds
+  ) {
+    return;
+  }
+
+  startTimer();
+}
+
+function startPresetTimer(seconds) {
+  return startLoadedTimer(setTimer(seconds));
 }
 
 function toggleTimer() {
@@ -556,6 +582,7 @@ function handleDialPointerDown(event) {
     startY: event.clientY,
     lastDegrees: position.degrees,
     selectedSeconds: totalSeconds,
+    cancellation: null,
     changedTime: false
   };
   refs.dialRim.setPointerCapture?.(event.pointerId);
@@ -570,7 +597,10 @@ function handleDialPointerMove(event) {
     return;
   }
 
-  dialGesture.changedTime = true;
+  if (!dialGesture.changedTime) {
+    dialGesture.changedTime = true;
+    dialGesture.cancellation = cancelNativeAlarm();
+  }
   refs.dialRim.classList.add("is-dragging");
   const currentDegrees = dialPosition(event).degrees;
   const deltaDegrees = shortestAngleDelta(dialGesture.lastDegrees, currentDegrees);
@@ -579,7 +609,7 @@ function handleDialPointerMove(event) {
     dialGesture.selectedSeconds,
     deltaDegrees
   );
-  setTimer(dialGesture.selectedSeconds);
+  loadTimer(dialGesture.selectedSeconds);
 }
 
 function cancelDialGesture() {
@@ -595,16 +625,18 @@ function cancelDialGesture() {
   }
 }
 
-function finishDialGesture(event, cancelled = false) {
+function finishDialGesture(event) {
   if (!dialGesture || dialGesture.pointerId !== event.pointerId) {
     return;
   }
 
-  const changedTime = dialGesture.changedTime;
+  const startRequest = dialGesture.changedTime && dialGesture.cancellation
+    ? { cancellation: dialGesture.cancellation, safeSeconds: totalSeconds }
+    : null;
   cancelDialGesture();
 
-  if (!cancelled && changedTime) {
-    startTimer();
+  if (startRequest) {
+    void startLoadedTimer(startRequest);
   }
 }
 
@@ -635,14 +667,14 @@ function handleDialKeyboard(event) {
 refs.presetButtons.forEach((button) => {
   button.addEventListener("pointerdown", cancelDialGesture);
   button.addEventListener("click", () => {
-    setTimer(Number(button.dataset.minutes) * 60);
+    void startPresetTimer(Number(button.dataset.minutes) * 60);
   });
 });
 
 refs.dialRim.addEventListener("pointerdown", handleDialPointerDown);
 refs.dialRim.addEventListener("pointermove", handleDialPointerMove);
 refs.dialRim.addEventListener("pointerup", finishDialGesture);
-refs.dialRim.addEventListener("pointercancel", (event) => finishDialGesture(event, true));
+refs.dialRim.addEventListener("pointercancel", finishDialGesture);
 refs.dialRim.addEventListener("lostpointercapture", finishDialGesture);
 refs.dial.addEventListener("keydown", handleDialKeyboard);
 refs.dial.addEventListener("focus", () => {

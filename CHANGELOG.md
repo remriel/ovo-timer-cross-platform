@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.7
+
+- Preset buttons now cancel any previous alarm, load their duration, and start
+  counting down immediately without requiring a second tap on the dial.
+- Guarded rapid preset changes so only the newest selection can schedule the
+  Android alarm after the prior alarm has finished cancelling.
+- Manual outer-rim changes also start automatically when the gesture ends,
+  including Android pointer-cancel endings after the time was changed.
+
 ## 1.0.6
 
 - Replaced the five shortcut buttons with a compact three-by-three grid for
