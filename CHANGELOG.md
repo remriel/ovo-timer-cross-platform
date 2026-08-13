@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.4
+
+- Replaced Android's standard timer notification with a dedicated native alarm
+  path: an exact wake-up when Android permits it, a full-screen lock-screen
+  alarm, looping alarm-volume audio, repeated vibration, and an explicit
+  `STOP ALARM` action.
+- The Android alarm channel now uses the highest available alarm priority,
+  public lock-screen visibility, and requests access to exact alarms,
+  full-screen alerts, and Do Not Disturb bypass in that order when needed.
+- Removed the Android-only dial focus target and tap highlight so starting or
+  pausing no longer leaves a blue selection box around the clock.
+
 ## 1.0.3
 
 - Added a separate two-lap duration trace around the original circular dial:

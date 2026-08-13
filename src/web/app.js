@@ -20,7 +20,7 @@ const themeStorageKey = "ovo-timer-theme-v1";
 const gestureThreshold = 6;
 const dragOuterPadding = 28;
 const notificationId = 41001;
-const notificationChannel = "ovo-alarm-v2";
+const notificationChannel = "ovo-alarm-fallback-v3";
 const refs = {
   dial: document.querySelector("#timerDial"),
   dialRim: document.querySelector("#dialRim"),
@@ -41,6 +41,13 @@ let phase = "idle";
 let dialGesture = null;
 let nativeAlarmRequest = 0;
 let nativeAlarmScheduled = false;
+
+if (nativePlatform === "android") {
+  // Android WebView can retain a blue accessibility/focus frame on slider-like
+  // elements after a touch. The dial is operated through pointer gestures,
+  // so it stays out of the Android focus order while desktop keyboard support remains.
+  refs.dial.setAttribute("tabindex", "-1");
+}
 
 function applyTheme(theme) {
   const safeTheme = theme === "light" ? "light" : "dark";
@@ -195,6 +202,17 @@ function nativeLocalNotifications() {
     ?? null;
 }
 
+function nativeOvoAlarm() {
+  if (
+    nativePlatform !== "android"
+    || !window.Capacitor?.isPluginAvailable?.("OvoAlarm")
+  ) {
+    return null;
+  }
+
+  return window.ovoNativeAlarm ?? window.Capacitor?.Plugins?.OvoAlarm ?? null;
+}
+
 async function ensureNativeAlarmReady() {
   const plugin = nativeLocalNotifications();
   if (!plugin) {
@@ -212,8 +230,8 @@ async function ensureNativeAlarmReady() {
 
     await plugin.createChannel?.({
       id: notificationChannel,
-      name: "Ovo alarms",
-      description: "Countdown alarm alerts",
+      name: "Ovo alarm fallback",
+      description: "Fallback countdown alerts if Android alarm mode is unavailable",
       importance: 5,
       sound: "ovo_alarm.wav",
       vibration: true,
@@ -226,9 +244,35 @@ async function ensureNativeAlarmReady() {
   }
 }
 
+async function requestNativeAlarmPriorityAccess() {
+  const alarm = nativeOvoAlarm();
+  if (!alarm) {
+    return;
+  }
+
+  try {
+    const status = await alarm.getStatus();
+    if (!status.exactAlarm || !status.fullScreen || !status.doNotDisturb) {
+      await alarm.requestPriorityAccess();
+    }
+  } catch {
+    // Android system settings are optional; the alarm still uses the strongest available path.
+  }
+}
+
 async function cancelNativeAlarm() {
   nativeAlarmRequest += 1;
   nativeAlarmScheduled = false;
+
+  const alarm = nativeOvoAlarm();
+  if (alarm) {
+    try {
+      await alarm.cancel();
+    } catch {
+      // Continue cancelling the standard fallback notification below.
+    }
+  }
+
   const plugin = nativeLocalNotifications();
   if (!plugin) {
     return;
@@ -243,6 +287,23 @@ async function cancelNativeAlarm() {
 
 async function scheduleNativeAlarm() {
   const request = ++nativeAlarmRequest;
+  const alarm = nativeOvoAlarm();
+  if (alarm) {
+    try {
+      const result = await alarm.schedule({
+        at: endTime,
+        title: "Ovo Timer",
+        body: "Time is up. Stop the alarm."
+      });
+      if (phase === "running" && endTime && request === nativeAlarmRequest) {
+        nativeAlarmScheduled = Boolean(result?.scheduled);
+        return;
+      }
+    } catch {
+      // The standard Capacitor notification remains a safety fallback.
+    }
+  }
+
   const plugin = await ensureNativeAlarmReady();
   if (!plugin || phase !== "running" || !endTime || request !== nativeAlarmRequest) {
     return;
@@ -265,8 +326,8 @@ async function scheduleNativeAlarm() {
         },
         channelId: notificationChannel,
         sound: "ovo_alarm.wav",
-        ongoing: false,
-        autoCancel: true
+        ongoing: true,
+        autoCancel: false
       }]
     });
     nativeAlarmScheduled = true;
@@ -276,7 +337,8 @@ async function scheduleNativeAlarm() {
 }
 
 function requestNotificationPermission() {
-  if (nativeLocalNotifications()) {
+  if (nativePlatform === "android") {
+    void ensureNativeAlarmReady();
     return;
   }
 
@@ -306,6 +368,7 @@ function startTimer() {
   phase = "running";
   endTime = Date.now() + remainingSeconds * 1000;
   requestNotificationPermission();
+  void requestNativeAlarmPriorityAccess();
   void scheduleNativeAlarm();
   startInterval();
   saveState();
@@ -398,10 +461,17 @@ function ringAlarm() {
 async function notifyFinished() {
   const details = {
     title: "Ovo Timer",
-    body: "Time is up. Your countdown is complete."
+    body: "Time is up. Stop the alarm."
   };
 
   try {
+    const alarm = nativeOvoAlarm();
+    if (alarm) {
+      await alarm.fireNow(details);
+      nativeAlarmScheduled = true;
+      return true;
+    }
+
     if (nativeLocalNotifications()) {
       if (!nativeAlarmScheduled) {
         const plugin = await ensureNativeAlarmReady();
@@ -412,17 +482,17 @@ async function notifyFinished() {
             body: details.body,
             channelId: notificationChannel,
             sound: "ovo_alarm.wav",
-            ongoing: false,
-            autoCancel: true
+            ongoing: true,
+            autoCancel: false
           }]
         });
       }
-      return;
+      return false;
     }
 
     if (window.ovoBridge?.notify) {
       await window.ovoBridge.notify(details);
-      return;
+      return false;
     }
 
     if (typeof Notification !== "undefined" && Notification.permission === "granted") {
@@ -431,6 +501,8 @@ async function notifyFinished() {
   } catch {
     // Notification permissions are controlled by the host operating system.
   }
+
+  return false;
 }
 
 function finishTimer() {
@@ -440,8 +512,17 @@ function finishTimer() {
   phase = "finished";
   saveState();
   render();
+  if (nativePlatform === "android" && nativeOvoAlarm()) {
+    void notifyFinished().then((nativeAlarmTriggered) => {
+      if (!nativeAlarmTriggered) {
+        ringAlarm();
+      }
+    });
+    return;
+  }
+
   ringAlarm();
-  notifyFinished();
+  void notifyFinished();
 }
 
 function tick() {
@@ -486,7 +567,11 @@ function handleDialPointerDown(event) {
 
   if (position.onClockFace) {
     event.preventDefault();
-    refs.dial.focus({ preventScroll: true });
+    if (nativePlatform === "android") {
+      refs.dial.blur();
+    } else {
+      refs.dial.focus({ preventScroll: true });
+    }
     toggleTimer();
     return;
   }
@@ -582,6 +667,11 @@ refs.dialRim.addEventListener("pointerup", finishDialGesture);
 refs.dialRim.addEventListener("pointercancel", (event) => finishDialGesture(event, true));
 refs.dialRim.addEventListener("lostpointercapture", finishDialGesture);
 refs.dial.addEventListener("keydown", handleDialKeyboard);
+refs.dial.addEventListener("focus", () => {
+  if (nativePlatform === "android") {
+    refs.dial.blur();
+  }
+});
 refs.themeToggle.addEventListener("click", toggleTheme);
 
 window.addEventListener("blur", cancelDialGesture);

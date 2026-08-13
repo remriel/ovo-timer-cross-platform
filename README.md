@@ -26,8 +26,9 @@ and is not affiliated with Ilumbo.
   starts the newly selected countdown; Space pauses/resumes and R resets.
 - Choose 1, 5, 15, 25, or 45-minute presets.
 - Receive a 5+ second audible finish alarm. Android also schedules a native
-  notification that can fire while the app is backgrounded or the screen is
-  locked (allow notification permission when prompted).
+  full-screen alarm that can wake the display while the app is backgrounded
+  or the screen is locked. It loops alarm-volume sound and vibration until you
+  press `STOP ALARM` (allow Android's requested alarm access when prompted).
 - Run the exact same responsive experience on Windows and Android.
 - Start in dark mode and use the compact `VIEW` toggle beneath the shortcuts
   whenever a light surface is more useful.

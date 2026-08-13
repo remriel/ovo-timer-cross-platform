@@ -113,6 +113,20 @@ html.native-android .timer-layout {
   padding: 0;
 }
 
+html.native-android .timer-dial,
+html.native-android .timer-dial:focus,
+html.native-android .timer-dial:focus-visible,
+html.native-android .timer-dial * {
+  -webkit-tap-highlight-color: transparent !important;
+  outline: none !important;
+}
+
+html.native-android .timer-dial {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 .timer-layout {
   display: grid;
   min-height: calc(100vh - 108px);
