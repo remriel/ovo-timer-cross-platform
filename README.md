@@ -9,7 +9,7 @@ and is not affiliated with Ilumbo.
 ## Screenshots
 
 <p align="center">
-  <img src="docs/screenshots/ovo-idle.png" alt="Ovo Timer idle at 25 minutes" width="31%" />
+  <img src="docs/screenshots/ovo-idle.png" alt="Ovo Timer loaded at 60 minutes" width="31%" />
   <img src="docs/screenshots/ovo-running.png" alt="Ovo Timer counting down" width="31%" />
   <img src="docs/screenshots/ovo-paused.png" alt="Ovo Timer paused with time remaining" width="31%" />
 </p>
@@ -24,14 +24,13 @@ and is not affiliated with Ilumbo.
   orbit, 60 minutes fills both, and the trace empties with the remaining time.
 - Tap the inner clock face to start or pause. Releasing a progress-band drag
   starts the newly selected countdown; Space pauses/resumes and R resets.
-- Choose 1, 5, 15, 25, or 45-minute presets.
+- Choose 1, 2, 3, 5, 10, 15, 20, 30, or 45-minute presets from a compact
+  three-by-three shortcut grid.
 - Receive a 5+ second audible finish alarm. Android also schedules a native
   full-screen alarm that can wake the display while the app is backgrounded
   or the screen is locked. It loops alarm-volume sound and vibration until you
   press `STOP ALARM` (allow Android's requested alarm access when prompted).
-- Run the exact same responsive experience on Windows and Android.
-- Start in dark mode and use the compact `VIEW` toggle beneath the shortcuts
-  whenever a light surface is more useful.
+- Run the exact same responsive, dark-only experience on Windows and Android.
 
 ## Build
 

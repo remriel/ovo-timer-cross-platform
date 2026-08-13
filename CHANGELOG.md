@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.6
+
+- Replaced the five shortcut buttons with a compact three-by-three grid for
+  1, 2, 3, 5, 10, 15, 20, 30, and 45 minutes.
+- Removed the theme toggle, stored theme preference, and light-theme styles so
+  the Windows and Android apps now stay in dark mode at all times.
+- Removed the yellow duration orbits' directional shadow and render completed
+  laps as solid masked rings, keeping them concentric, evenly spaced, and free
+  of the tiny conic-gradient seam at a full lap.
+
 ## 1.0.5
 
 - Removed Android's remaining blue tap rectangle from the square rim that owns

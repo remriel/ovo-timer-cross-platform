@@ -17,7 +17,6 @@ if (nativePlatform === "android") {
 }
 
 const storageKey = "ovo-timer-state-v1";
-const themeStorageKey = "ovo-timer-theme-v1";
 const gestureThreshold = 6;
 const dragOuterPadding = 28;
 const notificationId = 41001;
@@ -29,9 +28,7 @@ const refs = {
   timerValue: document.querySelector("#timerValue"),
   timerCaption: document.querySelector("#timerCaption"),
   liveStatus: document.querySelector("#liveStatus"),
-  presetButtons: Array.from(document.querySelectorAll(".preset")),
-  themeToggle: document.querySelector("#themeToggle"),
-  themeToggleLabel: document.querySelector("#themeToggleLabel")
+  presetButtons: Array.from(document.querySelectorAll(".preset"))
 };
 
 let totalSeconds = 25 * 60;
@@ -51,40 +48,6 @@ if (nativePlatform === "android") {
   document.documentElement.style.setProperty("-webkit-tap-highlight-color", "transparent", "important");
   refs.dialRim.style.setProperty("-webkit-tap-highlight-color", "transparent", "important");
   refs.dial.style.setProperty("-webkit-tap-highlight-color", "transparent", "important");
-}
-
-function applyTheme(theme) {
-  const safeTheme = theme === "light" ? "light" : "dark";
-  document.documentElement.dataset.theme = safeTheme;
-  refs.themeToggle.setAttribute("aria-pressed", String(safeTheme === "light"));
-  refs.themeToggle.setAttribute(
-    "aria-label",
-    safeTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"
-  );
-  refs.themeToggleLabel.textContent = safeTheme === "dark" ? "LIGHT" : "DARK";
-  document.querySelector('meta[name="theme-color"]')?.setAttribute(
-    "content",
-    safeTheme === "dark" ? "#1650ff" : "#ff4ba0"
-  );
-}
-
-function restoreTheme() {
-  try {
-    applyTheme(localStorage.getItem(themeStorageKey) || "dark");
-  } catch {
-    applyTheme("dark");
-  }
-}
-
-function toggleTheme() {
-  const nextTheme = document.documentElement.dataset.theme === "light" ? "dark" : "light";
-  applyTheme(nextTheme);
-
-  try {
-    localStorage.setItem(themeStorageKey, nextTheme);
-  } catch {
-    // The selected theme stays active even if storage is unavailable.
-  }
 }
 
 function saveState() {
@@ -175,6 +138,8 @@ function render() {
   refs.dial.style.setProperty("--progress", progress + "turn");
   refs.dialRim.style.setProperty("--trace-outer", trace.outer + "turn");
   refs.dialRim.style.setProperty("--trace-inner", trace.inner + "turn");
+  refs.dialRim.classList.toggle("is-outer-full", trace.outer >= 1);
+  refs.dialRim.classList.toggle("is-inner-full", trace.inner >= 1);
   refs.dial.dataset.phase = phase;
   refs.timerValue.textContent = formatClock(activeSeconds);
   refs.timerCaption.textContent = copy.caption;
@@ -685,8 +650,6 @@ refs.dial.addEventListener("focus", () => {
     refs.dial.blur();
   }
 });
-refs.themeToggle.addEventListener("click", toggleTheme);
-
 window.addEventListener("blur", cancelDialGesture);
 
 window.addEventListener("keydown", (event) => {
@@ -711,6 +674,5 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
-restoreTheme();
 restoreState();
 render();
