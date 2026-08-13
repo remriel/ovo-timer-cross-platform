@@ -10,9 +10,29 @@
   --pink: #ff4ba0;
   --green: #8bdd55;
   --shadow: 7px 7px 0 var(--blue);
+  --shell: rgba(9, 10, 16, 0.96);
+  --backdrop-overlay: rgba(5, 6, 10, 0.76);
+  --trace-color: var(--yellow);
+  --on-blue: var(--cream);
+  --toggle-background: var(--yellow);
   color: var(--cream);
   background: var(--deep);
+  color-scheme: dark;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+html[data-theme="light"] {
+  --paper: #fff8e8;
+  --cream: #080808;
+  --line: #080808;
+  --deep: #efe4d3;
+  --shadow: 7px 7px 0 var(--blue);
+  --shell: rgba(255, 248, 232, 0.94);
+  --backdrop-overlay: rgba(255, 248, 232, 0.8);
+  --trace-color: var(--red);
+  --on-blue: #fff8e8;
+  --toggle-background: var(--pink);
+  color-scheme: light;
 }
 
 * {
@@ -56,7 +76,7 @@ button {
   position: absolute;
   inset: 0;
   content: "";
-  background: rgba(5, 6, 10, 0.76);
+  background: var(--backdrop-overlay);
 }
 
 .app-shell {
@@ -65,7 +85,7 @@ button {
   margin: 16px auto;
   padding: clamp(18px, 3vw, 34px);
   border: 5px solid var(--line);
-  background: rgba(9, 10, 16, 0.96);
+  background: var(--shell);
   box-shadow: 12px 12px 0 var(--blue);
 }
 
@@ -114,12 +134,14 @@ html.native-android .timer-layout {
   position: relative;
   display: grid;
   width: 100%;
-  min-height: min(400px, 48vw);
+  min-height: min(424px, calc(68vw + 56px));
   margin: 0 0 10px;
   place-items: center;
 }
 
 .dial-rim {
+  --trace-outer: 0.8333turn;
+  --trace-inner: 0turn;
   position: relative;
   display: grid;
   width: min(368px, 68vw);
@@ -142,10 +164,36 @@ html.native-android .timer-layout {
   transform: rotate(-2deg) scale(1.02);
 }
 
+.selection-trace {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  border-radius: 50%;
+  pointer-events: none;
+  background: conic-gradient(
+    from 0deg,
+    var(--trace-color) 0 var(--trace),
+    transparent var(--trace) 1turn
+  );
+  filter: drop-shadow(3px 3px 0 var(--ink));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 5px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 5px));
+}
+
+.selection-trace-outer {
+  --trace: var(--trace-outer);
+  inset: -24px;
+}
+
+.selection-trace-inner {
+  --trace: var(--trace-inner);
+  inset: -12px;
+}
+
 .timer-dial {
   --progress: 0.4167turn;
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: grid;
   width: 100%;
   aspect-ratio: 1;
@@ -282,7 +330,7 @@ html.native-android .timer-layout {
 }
 
 .preset-blue {
-  color: var(--cream);
+  color: var(--on-blue);
   background: var(--blue);
 }
 
@@ -300,6 +348,56 @@ html.native-android .timer-layout {
 
 .preset-red {
   background: var(--red);
+}
+
+.theme-control-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+.theme-toggle {
+  display: inline-grid;
+  min-width: 92px;
+  padding: 7px 9px 6px;
+  border: 4px solid var(--ink);
+  cursor: pointer;
+  color: var(--ink);
+  background: var(--toggle-background);
+  box-shadow: 4px 4px 0 var(--ink);
+  line-height: 0.9;
+  text-align: left;
+  transition: transform 90ms ease, box-shadow 90ms ease;
+}
+
+.theme-toggle:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.theme-toggle:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.theme-toggle:focus-visible {
+  outline: 4px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.theme-toggle span,
+.theme-toggle strong {
+  font-family: Impact, Arial Black, Arial, sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.theme-toggle span {
+  font-size: 0.62rem;
+}
+
+.theme-toggle strong {
+  font-size: 1rem;
 }
 
 .visually-hidden {
@@ -339,7 +437,7 @@ html.native-android .timer-layout {
   }
 
   .dial-zone {
-    min-height: min(338px, 82vw);
+    min-height: min(390px, calc(78vw + 52px));
   }
 
   .dial-rim {
@@ -364,6 +462,10 @@ html.native-android .timer-layout {
   .preset-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+
+  .theme-control-row {
+    margin-top: 13px;
+  }
 }
 
 @media (max-height: 650px) and (min-width: 541px) {
@@ -380,7 +482,7 @@ html.native-android .timer-layout {
   }
 
   .dial-zone {
-    min-height: 318px;
+    min-height: min(360px, calc(54vh + 50px));
     margin-bottom: 4px;
   }
 

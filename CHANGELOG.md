@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.3
+
+- Added a separate two-lap duration trace around the original circular dial:
+  30 minutes fills one orbit and 60 minutes fills both.
+- The duration trace follows the chosen time before starting, then visibly
+  empties while running or paused so it always reflects time remaining.
+- Added a compact, persistent dark/light view toggle while keeping dark mode
+  as the initial view.
+
 ## 1.0.2
 
 - Increased every visible timer, caption, shortcut, and unit label by 30% for

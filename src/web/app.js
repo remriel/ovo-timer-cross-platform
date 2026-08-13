@@ -2,6 +2,7 @@ import {
   MAX_SECONDS,
   MIN_SECONDS,
   clamp,
+  doubleLapProgress,
   formatClock,
   normalizeSeconds,
   remainingFromEndTime,
@@ -15,6 +16,7 @@ if (nativePlatform === "android") {
 }
 
 const storageKey = "ovo-timer-state-v1";
+const themeStorageKey = "ovo-timer-theme-v1";
 const gestureThreshold = 6;
 const dragOuterPadding = 28;
 const notificationId = 41001;
@@ -26,7 +28,9 @@ const refs = {
   timerValue: document.querySelector("#timerValue"),
   timerCaption: document.querySelector("#timerCaption"),
   liveStatus: document.querySelector("#liveStatus"),
-  presetButtons: Array.from(document.querySelectorAll(".preset"))
+  presetButtons: Array.from(document.querySelectorAll(".preset")),
+  themeToggle: document.querySelector("#themeToggle"),
+  themeToggleLabel: document.querySelector("#themeToggleLabel")
 };
 
 let totalSeconds = 25 * 60;
@@ -37,6 +41,40 @@ let phase = "idle";
 let dialGesture = null;
 let nativeAlarmRequest = 0;
 let nativeAlarmScheduled = false;
+
+function applyTheme(theme) {
+  const safeTheme = theme === "light" ? "light" : "dark";
+  document.documentElement.dataset.theme = safeTheme;
+  refs.themeToggle.setAttribute("aria-pressed", String(safeTheme === "light"));
+  refs.themeToggle.setAttribute(
+    "aria-label",
+    safeTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+  );
+  refs.themeToggleLabel.textContent = safeTheme === "dark" ? "LIGHT" : "DARK";
+  document.querySelector('meta[name="theme-color"]')?.setAttribute(
+    "content",
+    safeTheme === "dark" ? "#1650ff" : "#ff4ba0"
+  );
+}
+
+function restoreTheme() {
+  try {
+    applyTheme(localStorage.getItem(themeStorageKey) || "dark");
+  } catch {
+    applyTheme("dark");
+  }
+}
+
+function toggleTheme() {
+  const nextTheme = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  applyTheme(nextTheme);
+
+  try {
+    localStorage.setItem(themeStorageKey, nextTheme);
+  } catch {
+    // The selected theme stays active even if storage is unavailable.
+  }
+}
 
 function saveState() {
   const snapshot = {
@@ -120,9 +158,12 @@ function setWindowTitle() {
 function render() {
   const activeSeconds = phase === "finished" ? 0 : remainingSeconds;
   const progress = timerProgress(totalSeconds, activeSeconds, phase !== "idle");
+  const trace = doubleLapProgress(activeSeconds);
   const copy = getStatusCopy();
 
   refs.dial.style.setProperty("--progress", progress + "turn");
+  refs.dialRim.style.setProperty("--trace-outer", trace.outer + "turn");
+  refs.dialRim.style.setProperty("--trace-inner", trace.inner + "turn");
   refs.dial.dataset.phase = phase;
   refs.timerValue.textContent = formatClock(activeSeconds);
   refs.timerCaption.textContent = copy.caption;
@@ -539,8 +580,9 @@ refs.dialRim.addEventListener("pointerdown", handleDialPointerDown);
 refs.dialRim.addEventListener("pointermove", handleDialPointerMove);
 refs.dialRim.addEventListener("pointerup", finishDialGesture);
 refs.dialRim.addEventListener("pointercancel", (event) => finishDialGesture(event, true));
-refs.dialRim.addEventListener("lostpointercapture", cancelDialGesture);
+refs.dialRim.addEventListener("lostpointercapture", finishDialGesture);
 refs.dial.addEventListener("keydown", handleDialKeyboard);
+refs.themeToggle.addEventListener("click", toggleTheme);
 
 window.addEventListener("blur", cancelDialGesture);
 
@@ -566,5 +608,6 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
+restoreTheme();
 restoreState();
 render();

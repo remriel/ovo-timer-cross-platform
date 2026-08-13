@@ -15,11 +15,13 @@
         <div class="timer-panel">
           <div class="dial-zone">
             <div id="dialRim" class="dial-rim">
+              <span class="selection-trace selection-trace-outer" aria-hidden="true"></span>
+              <span class="selection-trace selection-trace-inner" aria-hidden="true"></span>
               <div
                 id="timerDial"
                 class="timer-dial"
                 aria-label="Countdown clock"
-                aria-description="Tap the clock face to start or pause. Drag the colored progress band around its edge to choose a duration."
+                aria-description="Tap the clock face to start or pause. Drag the colored progress band around its edge to choose a duration. The two duration lines make one loop per 30 minutes and empty as time runs out."
                 aria-valuemin="10"
                 aria-valuemax="3600"
                 aria-valuenow="1500"
@@ -48,6 +50,18 @@
               <button class="preset preset-pink" data-minutes="15" type="button">15<br /><span>MIN</span></button>
               <button class="preset preset-green" data-minutes="25" type="button">25<br /><span>MIN</span></button>
               <button class="preset preset-red" data-minutes="45" type="button">45<br /><span>MIN</span></button>
+            </div>
+            <div class="theme-control-row">
+              <button
+                id="themeToggle"
+                class="theme-toggle"
+                type="button"
+                aria-label="Switch to light mode"
+                aria-pressed="false"
+              >
+                <span>VIEW</span>
+                <strong id="themeToggleLabel">LIGHT</strong>
+              </button>
             </div>
           </section>
         </aside>

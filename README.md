@@ -20,6 +20,8 @@ and is not affiliated with Ilumbo.
 
 - Set a countdown from 10 seconds to 60 minutes by dragging the visible
   colored progress band around the clock.
+- Follow a two-lap duration trace around the dial: 30 minutes fills the first
+  orbit, 60 minutes fills both, and the trace empties with the remaining time.
 - Tap the inner clock face to start or pause. Releasing a progress-band drag
   starts the newly selected countdown; Space pauses/resumes and R resets.
 - Choose 1, 5, 15, 25, or 45-minute presets.
@@ -27,6 +29,8 @@ and is not affiliated with Ilumbo.
   notification that can fire while the app is backgrounded or the screen is
   locked (allow notification permission when prompted).
 - Run the exact same responsive experience on Windows and Android.
+- Start in dark mode and use the compact `VIEW` toggle beneath the shortcuts
+  whenever a light surface is more useful.
 
 ## Build
 

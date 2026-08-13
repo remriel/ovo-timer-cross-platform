@@ -42,3 +42,13 @@ export function timerProgress(totalSeconds, remainingSeconds, showRemaining) {
   const renderedSeconds = showRemaining ? remainingSeconds : totalSeconds;
   return clamp(renderedSeconds / MAX_SECONDS, 0, 1);
 }
+
+export function doubleLapProgress(seconds) {
+  const halfHour = 30 * 60;
+  const laps = clamp(normalizeSeconds(seconds) / halfHour, 0, 2);
+
+  return {
+    outer: Math.min(laps, 1),
+    inner: clamp(laps - 1, 0, 1)
+  };
+}
