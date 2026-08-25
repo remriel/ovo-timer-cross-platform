@@ -41,18 +41,26 @@ the timer and its drag surface must stay centered, symmetrical, and interactive.
 
 ## Release state
 
-- `v1.0.8` is the last published GitHub release and Drive upload.
-- The current source is the pending `v1.0.9` release with Settings, themes,
-  background modes, and centered dial geometry.
+- Published GitHub release [`v1.0.9`](https://github.com/remriel/ovo-timer-cross-platform/releases/tag/v1.0.9)
+  with the Android APK, Windows installer, portable EXE, and checksum file.
+- Uploaded the Android APK to [Google Drive](https://drive.google.com/file/d/1DJ9csr_orw7XsA72t-1z2udDnBIFIA_0/view?usp=drivesdk)
+  as owner-only by default.
+- The source and release artifacts are synchronized at commit `5bae051` plus
+  this release handoff update.
 - Local artifacts are copied to the workspace `outputs/` folder:
   `OvoTimer-Android-1.0.9-debug.apk`, `OvoTimer-Setup-1.0.9-x64.exe`,
   `OvoTimer-Portable-1.0.9-x64.exe`, and `SHA256SUMS-1.0.9.txt`.
 
-## Next steps
+## Final handoff
 
-1. Run the contract suite and browser smoke checks after `npm run prepare:web`.
-2. Build Android and Windows artifacts once from the 1.0.9 source, verify
-   package metadata and SHA-256 hashes, publish the GitHub release, and upload
-   the new APK to Google Drive.
-3. Record final artifact links, Drive file ID, tests, and any build caveats
-   here before handoff.
+- GitHub release assets: Android APK, Windows x64 installer, Windows x64
+  portable build, and `SHA256SUMS-1.0.9.txt`.
+- Drive file ID: `1DJ9csr_orw7XsA72t-1z2udDnBIFIA_0`.
+- APK SHA-256:
+  `1ABBAE3C0242A5E2670222C858808CBED4E573FC35C8ED049289BF687170A519`.
+- Windows installer SHA-256:
+  `7BEBCB650728B3AFA2CEF9F5320C64DA9856018D9D0AC9B74736E8C7B9FCAF3A`.
+- Windows portable SHA-256:
+  `FE930651A129B121559263B5BA2812239E6171B276483F805E037ABB955404B0`.
+- Native emulator smoke testing remains unavailable because this machine has
+  no Android device or configured AVD; build and asset sync completed.
