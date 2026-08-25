@@ -41,3 +41,13 @@ test("renders full duration orbits without an offset shadow or conic seam", () =
   assert.match(app, /classList\.toggle\("is-outer-full", trace\.outer >= 1\)/);
   assert.match(app, /classList\.toggle\("is-inner-full", trace\.inner >= 1\)/);
 });
+
+test("runs the subtle pipe-style wisps only while the countdown is active", () => {
+  assert.match(html, /class="dial-wisp dial-wisp-one" aria-hidden="true"/);
+  assert.match(html, /class="dial-wisp dial-wisp-two" aria-hidden="true"/);
+  assert.match(app, /classList\.toggle\("is-running", phase === "running"\)/);
+  assert.match(styles, /\.dial-rim\.is-running \.dial-wisp-one/);
+  assert.match(styles, /@keyframes dial-wisp-orbit-one/);
+  assert.match(styles, /@keyframes dial-wisp-orbit-two/);
+  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)/);
+});

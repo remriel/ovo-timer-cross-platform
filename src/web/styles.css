@@ -207,6 +207,131 @@ html.native-android .timer-dial {
   inset: -12px;
 }
 
+.dial-wisp {
+  --wisp-start: -28deg;
+  --wisp-scale: 1;
+  --wisp-color: var(--yellow);
+  position: absolute;
+  inset: -34px;
+  z-index: 1;
+  display: block;
+  overflow: visible;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  color: var(--wisp-color);
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 18deg,
+    transparent 18deg 24deg,
+    var(--wisp-color) 33deg,
+    var(--pink) 48deg,
+    transparent 66deg 360deg
+  );
+  filter: blur(0.45px);
+  mix-blend-mode: screen;
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 9px),
+    #000 calc(100% - 7px),
+    #000 calc(100% - 2px),
+    transparent calc(100% - 1px)
+  );
+  mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 9px),
+    #000 calc(100% - 7px),
+    #000 calc(100% - 2px),
+    transparent calc(100% - 1px)
+  );
+  transform: rotate(var(--wisp-start)) scale(var(--wisp-scale));
+  will-change: transform, opacity;
+}
+
+.dial-wisp::before {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 15px;
+  height: 9px;
+  content: "";
+  border: 3px solid var(--ink);
+  border-radius: 2px;
+  background: var(--wisp-color);
+  box-shadow: 0 0 0 2px var(--wisp-color), 0 0 14px var(--wisp-color);
+  transform: translate(-50%, -50%);
+}
+
+.dial-wisp-two {
+  --wisp-start: 154deg;
+  --wisp-scale: 0.94;
+  --wisp-color: var(--blue);
+  inset: -46px;
+  opacity: 0;
+  filter: blur(0.8px);
+}
+
+.dial-wisp-two::before {
+  width: 12px;
+  height: 8px;
+  border-width: 2px;
+  box-shadow: 0 0 0 1px var(--wisp-color), 0 0 12px var(--wisp-color);
+}
+
+.dial-rim.is-running .dial-wisp-one {
+  animation:
+    dial-wisp-orbit-one 7.2s linear infinite,
+    dial-wisp-breathe 2.8s ease-in-out infinite;
+}
+
+.dial-rim.is-running .dial-wisp-two {
+  animation:
+    dial-wisp-orbit-two 9.6s linear infinite,
+    dial-wisp-breathe-two 3.7s ease-in-out infinite;
+}
+
+@keyframes dial-wisp-orbit-one {
+  from {
+    transform: rotate(var(--wisp-start)) scale(var(--wisp-scale));
+  }
+
+  to {
+    transform: rotate(calc(var(--wisp-start) + 360deg)) scale(var(--wisp-scale));
+  }
+}
+
+@keyframes dial-wisp-orbit-two {
+  from {
+    transform: rotate(var(--wisp-start)) scale(var(--wisp-scale));
+  }
+
+  to {
+    transform: rotate(calc(var(--wisp-start) - 360deg)) scale(var(--wisp-scale));
+  }
+}
+
+@keyframes dial-wisp-breathe {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 0.58;
+  }
+}
+
+@keyframes dial-wisp-breathe-two {
+  0%,
+  100% {
+    opacity: 0.12;
+  }
+
+  50% {
+    opacity: 0.38;
+  }
+}
+
 .timer-dial {
   --progress: 0.4167turn;
   position: relative;
@@ -466,5 +591,14 @@ html.native-android .timer-dial {
   *::after {
     scroll-behavior: auto !important;
     transition-duration: 0.001ms !important;
+  }
+
+  .dial-rim.is-running .dial-wisp {
+    animation: none !important;
+    opacity: 0.26;
+  }
+
+  .dial-rim.is-running .dial-wisp-two {
+    opacity: 0.16;
   }
 }

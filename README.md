@@ -22,6 +22,9 @@ and is not affiliated with Ilumbo.
   colored progress band around the clock.
 - Follow a two-lap duration trace around the dial: 30 minutes fills the first
   orbit, 60 minutes fills both, and the trace empties with the remaining time.
+- While running, two soft, offset color wisps orbit the rim like a tiny
+  Windows-pipe screensaver: the moving pipe caps add motion without covering
+  the countdown or changing the drag target.
 - Tap the inner clock face to start or pause. Releasing a progress-band drag
   starts the newly selected countdown; Space pauses/resumes and R resets.
 - Choose 1, 2, 3, 5, 10, 15, 20, 30, or 45-minute presets from a compact

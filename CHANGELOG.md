@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.8
+
+- Added two subtle, offset pipe-style wisps that orbit the dial only while the
+  countdown is running, with a reduced-motion fallback that leaves them still.
+- Kept the wisps outside the clock face and pointer-free so they never cover
+  the timer text or interfere with rim dragging.
+
 ## 1.0.7
 
 - Preset buttons now cancel any previous alarm, load their duration, and start
