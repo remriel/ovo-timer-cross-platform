@@ -3,6 +3,7 @@ www/
 release/
 resources/
 .playwright-cli/
+output/
 assets/icon.png
 assets/*.ico
 android/.gradle/
