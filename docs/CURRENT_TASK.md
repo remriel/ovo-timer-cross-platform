@@ -31,4 +31,6 @@ the feel of the classic Windows pipe screensaver.
   `35`, and APK v1/v2 signature verification passed.
 - Windows x64 NSIS installer and portable executable built successfully.
 - Checksums are recorded in the sibling `outputs/SHA256SUMS-1.0.8.txt` file.
-- GitHub and Google Drive publication remain the handoff step for this task.
+- GitHub `v1.0.8` is published from commit `83e0db3`.
+- The APK was uploaded to Google Drive as file ID
+  `1XuvIkMfa0JB6R-tTe9yZ17-KDf0D8-V2`; Drive reports it as owner-only.
