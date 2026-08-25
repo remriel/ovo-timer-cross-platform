@@ -11,56 +11,117 @@
   <body>
     <div class="poster-background" aria-hidden="true"></div>
     <main class="app-shell">
-      <section class="timer-layout" aria-label="Countdown timer">
-        <div class="timer-panel">
-          <div class="dial-zone">
-            <div id="dialRim" class="dial-rim">
-              <span class="selection-trace selection-trace-outer" aria-hidden="true"></span>
-              <span class="selection-trace selection-trace-inner" aria-hidden="true"></span>
-              <span class="dial-wisp dial-wisp-one" aria-hidden="true"></span>
-              <span class="dial-wisp dial-wisp-two" aria-hidden="true"></span>
-              <div
-                id="timerDial"
-                class="timer-dial"
-                aria-label="Countdown clock"
-                aria-description="Tap the clock face to start or pause. Drag the colored progress band around its edge to choose a duration. Each full turn adds 30 minutes, with a hard stop at 60 minutes. Reverse the drag to reduce the time."
-                aria-valuemin="10"
-                aria-valuemax="3600"
-                aria-valuenow="1500"
-                aria-valuetext="25 minutes"
-                tabindex="0"
-                role="slider"
-              >
-                <span class="dial-progress" id="dialProgress">
-                  <span class="dial-face">
-                    <span id="timerValue" class="timer-value">25:00</span>
-                    <span id="timerCaption" class="timer-caption">ON THE DIAL</span>
+      <div id="screensaverLayer" class="screensaver-layer" aria-hidden="true">
+        <img id="screensaverSprite" class="screensaver-sprite" src="./assets/screensaver-flowerbox.png" alt="" />
+      </div>
+
+      <section id="timerScreen" class="app-screen timer-screen" aria-label="Countdown timer">
+        <div class="timer-layout">
+          <div class="timer-panel">
+            <div class="dial-zone">
+              <div id="dialRim" class="dial-rim">
+                <span class="selection-trace selection-trace-outer" aria-hidden="true"></span>
+                <span class="selection-trace selection-trace-inner" aria-hidden="true"></span>
+                <span class="dial-wisp dial-wisp-one" aria-hidden="true"></span>
+                <span class="dial-wisp dial-wisp-two" aria-hidden="true"></span>
+                <div
+                  id="timerDial"
+                  class="timer-dial"
+                  aria-label="Countdown clock"
+                  aria-description="Tap the clock face to start or pause. Drag the colored progress band around its edge to choose a duration. Each full turn adds 30 minutes, with a hard stop at 60 minutes. Reverse the drag to reduce the time."
+                  aria-valuemin="10"
+                  aria-valuemax="3600"
+                  aria-valuenow="1500"
+                  aria-valuetext="25 minutes"
+                  tabindex="0"
+                  role="slider"
+                >
+                  <span class="dial-progress" id="dialProgress">
+                    <span class="dial-face">
+                      <span id="timerValue" class="timer-value">25:00</span>
+                      <span id="timerCaption" class="timer-caption">ON THE DIAL</span>
+                    </span>
                   </span>
-                </span>
+                </div>
               </div>
             </div>
+
+            <p id="liveStatus" class="live-status visually-hidden" aria-live="polite">25 minutes is loaded.</p>
           </div>
 
-          <p id="liveStatus" class="live-status visually-hidden" aria-live="polite">25 minutes is loaded.</p>
+          <aside class="side-panel" aria-label="One-tap countdown shortcuts">
+            <section class="side-section">
+              <div class="preset-grid">
+                <button class="preset preset-blue" data-minutes="1" type="button">01<br /><span>MIN</span></button>
+                <button class="preset preset-yellow" data-minutes="2" type="button">02<br /><span>MIN</span></button>
+                <button class="preset preset-pink" data-minutes="3" type="button">03<br /><span>MIN</span></button>
+                <button class="preset preset-green" data-minutes="5" type="button">05<br /><span>MIN</span></button>
+                <button class="preset preset-red" data-minutes="10" type="button">10<br /><span>MIN</span></button>
+                <button class="preset preset-blue" data-minutes="15" type="button">15<br /><span>MIN</span></button>
+                <button class="preset preset-yellow" data-minutes="20" type="button">20<br /><span>MIN</span></button>
+                <button class="preset preset-pink" data-minutes="30" type="button">30<br /><span>MIN</span></button>
+                <button class="preset preset-red" data-minutes="45" type="button">45<br /><span>MIN</span></button>
+              </div>
+              <button id="settingsButton" class="settings-button" type="button" aria-label="Open settings">
+                <img src="./assets/settings-gear.png" alt="" aria-hidden="true" />
+                <span>SETTINGS</span>
+              </button>
+            </section>
+          </aside>
         </div>
-
-        <aside class="side-panel" aria-label="One-tap countdown shortcuts">
-          <section class="side-section">
-            <div class="preset-grid">
-              <button class="preset preset-blue" data-minutes="1" type="button">01<br /><span>MIN</span></button>
-              <button class="preset preset-yellow" data-minutes="2" type="button">02<br /><span>MIN</span></button>
-              <button class="preset preset-pink" data-minutes="3" type="button">03<br /><span>MIN</span></button>
-              <button class="preset preset-green" data-minutes="5" type="button">05<br /><span>MIN</span></button>
-              <button class="preset preset-red" data-minutes="10" type="button">10<br /><span>MIN</span></button>
-              <button class="preset preset-blue" data-minutes="15" type="button">15<br /><span>MIN</span></button>
-              <button class="preset preset-yellow" data-minutes="20" type="button">20<br /><span>MIN</span></button>
-              <button class="preset preset-pink" data-minutes="30" type="button">30<br /><span>MIN</span></button>
-              <button class="preset preset-red" data-minutes="45" type="button">45<br /><span>MIN</span></button>
-            </div>
-          </section>
-        </aside>
       </section>
 
+      <section id="settingsScreen" class="app-screen settings-screen" aria-labelledby="settingsTitle" hidden>
+        <div class="settings-header">
+          <button id="backButton" class="back-button" type="button">← BACK TO TIMER</button>
+          <div>
+            <p class="eyebrow">OVO//SETTINGS</p>
+            <h1 id="settingsTitle">MAKE IT YOURS.</h1>
+          </div>
+        </div>
+
+        <div class="settings-grid">
+          <section class="settings-section settings-section-wide" aria-labelledby="motionTitle">
+            <div class="settings-copy">
+              <p class="eyebrow">BACKGROUND MOTION</p>
+              <h2 id="motionTitle">PICK A SCREENSAVER.</h2>
+              <p>Choose what drifts behind the dial while your countdown runs.</p>
+            </div>
+            <div class="screensaver-options" role="group" aria-label="Background animation">
+              <button class="screensaver-option option-bezier" data-screensaver="bezier" type="button" aria-pressed="false">
+                <span class="option-art"><img src="./assets/screensaver-bezier.png" alt="" /></span>
+                <span class="option-label">BEZIER</span>
+                <span class="option-detail">LOOP + FLOW</span>
+              </button>
+              <button class="screensaver-option option-flowerbox" data-screensaver="flowerbox" type="button" aria-pressed="true">
+                <span class="option-art"><img src="./assets/screensaver-flowerbox.png" alt="" /></span>
+                <span class="option-label">FLOWERBOX</span>
+                <span class="option-detail">BOUNCE + BLOOM</span>
+              </button>
+              <button class="screensaver-option option-maze" data-screensaver="maze" type="button" aria-pressed="false">
+                <span class="option-art"><img src="./assets/screensaver-maze.png" alt="" /></span>
+                <span class="option-label">3D MAZE</span>
+                <span class="option-detail">TURN + DRIFT</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="settings-section appearance-section" aria-labelledby="appearanceTitle">
+            <div class="settings-copy">
+              <p class="eyebrow">APPEARANCE</p>
+              <h2 id="appearanceTitle">CHOOSE A COLORWAY.</h2>
+              <p>Dark and light are included, plus two extra high-contrast palettes.</p>
+            </div>
+            <div class="theme-options" role="group" aria-label="Color theme">
+              <button class="theme-option theme-dark" data-theme-option="dark" type="button" aria-pressed="true">DARK MODE</button>
+              <button class="theme-option theme-light" data-theme-option="light" type="button" aria-pressed="false">LIGHT MODE</button>
+              <button class="theme-option theme-cobalt" data-theme-option="cobalt" type="button" aria-pressed="false">COBALT NIGHT</button>
+              <button class="theme-option theme-sunset" data-theme-option="sunset" type="button" aria-pressed="false">SUNSET INK</button>
+            </div>
+          </section>
+        </div>
+        <p id="settingsStatus" class="settings-status" aria-live="polite">Flowerbox background selected. Dark mode selected.</p>
+      </section>
     </main>
     <script src="./vendor/capacitor.js"></script>
     <script src="./vendor/local-notifications.js"></script>

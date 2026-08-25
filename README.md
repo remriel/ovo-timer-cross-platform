@@ -22,9 +22,9 @@ and is not affiliated with Ilumbo.
   colored progress band around the clock.
 - Follow a two-lap duration trace around the dial: 30 minutes fills the first
   orbit, 60 minutes fills both, and the trace empties with the remaining time.
-- While running, two soft, offset color wisps orbit the rim like a tiny
-  Windows-pipe screensaver: the moving pipe caps add motion without covering
-  the countdown or changing the drag target.
+- While running, a selected screensaver-style artwork drifts and bounces in the
+  background behind the dial. Choose Bezier, Flowerbox, or 3D Maze in Settings;
+  the artwork never owns pointer input or covers the timer face.
 - Tap the inner clock face to start or pause. Releasing a progress-band drag
   starts the newly selected countdown; Space pauses/resumes and R resets.
 - Choose 1, 2, 3, 5, 10, 15, 20, 30, or 45-minute presets from a compact
@@ -34,7 +34,11 @@ and is not affiliated with Ilumbo.
   full-screen alarm that can wake the display while the app is backgrounded
   or the screen is locked. It loops alarm-volume sound and vibration until you
   press `STOP ALARM` (allow Android's requested alarm access when prompted).
-- Run the exact same responsive, dark-only experience on Windows and Android.
+- Open the separate Settings screen from the small gear button at the bottom of
+  the timer. Choose Dark, Light, Cobalt Night, or Sunset Ink; the selected
+  palette and screensaver are saved locally on the device.
+- Run the exact same responsive experience on Windows and Android, with dark
+  mode as the default.
 
 ## Build
 

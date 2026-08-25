@@ -20,6 +20,63 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
+html[data-theme="light"] {
+  --ink: #080808;
+  --paper: #fff8e8;
+  --cream: #15131d;
+  --line: #15131d;
+  --deep: #e8e0d2;
+  --blue: #1650ff;
+  --yellow: #ffd30a;
+  --red: #ff3b30;
+  --pink: #ff4ba0;
+  --green: #72cf36;
+  --shell: rgba(255, 248, 232, 0.95);
+  --backdrop-overlay: rgba(255, 248, 232, 0.72);
+  --trace-color: var(--red);
+  --on-blue: #fff8e8;
+  color: var(--cream);
+  color-scheme: light;
+}
+
+html[data-theme="cobalt"] {
+  --ink: #02060d;
+  --paper: #0d213a;
+  --cream: #f5fbff;
+  --line: #f5fbff;
+  --deep: #071426;
+  --blue: #35a7ff;
+  --yellow: #ffe54d;
+  --red: #ff5a62;
+  --pink: #c884ff;
+  --green: #71e2c2;
+  --shell: rgba(7, 20, 38, 0.95);
+  --backdrop-overlay: rgba(2, 8, 20, 0.78);
+  --trace-color: var(--yellow);
+  --on-blue: #02060d;
+  color: var(--cream);
+  color-scheme: dark;
+}
+
+html[data-theme="sunset"] {
+  --ink: #0d050a;
+  --paper: #2c1320;
+  --cream: #fff0d7;
+  --line: #fff0d7;
+  --deep: #1a0d17;
+  --blue: #ff7d3d;
+  --yellow: #ffd166;
+  --red: #ff4d6d;
+  --pink: #ff7eb6;
+  --green: #b8de67;
+  --shell: rgba(26, 13, 23, 0.95);
+  --backdrop-overlay: rgba(20, 5, 15, 0.75);
+  --trace-color: var(--yellow);
+  --on-blue: #0d050a;
+  color: var(--cream);
+  color-scheme: dark;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -65,6 +122,9 @@ button {
 }
 
 .app-shell {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   width: min(1120px, calc(100% - 32px));
   min-height: calc(100vh - 32px);
   margin: 16px auto;
@@ -72,6 +132,48 @@ button {
   border: 5px solid var(--line);
   background: var(--shell);
   box-shadow: 12px 12px 0 var(--blue);
+}
+
+.app-screen {
+  position: relative;
+  z-index: 2;
+}
+
+.app-screen[hidden] {
+  display: none;
+}
+
+.screensaver-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.screensaver-layer.is-active {
+  opacity: 0.38;
+}
+
+.screensaver-sprite {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: clamp(132px, 22vw, 236px);
+  max-width: none;
+  height: auto;
+  transform: translate3d(0, 0, 0);
+  filter: saturate(1.18) drop-shadow(14px 16px 0 rgba(0, 0, 0, 0.22));
+  will-change: transform;
+}
+
+.timer-panel,
+.side-panel,
+.settings-screen {
+  position: relative;
+  z-index: 2;
 }
 
 html.native-android,
@@ -131,12 +233,14 @@ html.native-android .timer-dial {
   min-height: calc(100vh - 108px);
   grid-template-columns: minmax(0, 1fr);
   align-content: center;
+  justify-items: center;
   gap: clamp(12px, 2vw, 18px);
   padding: clamp(8px, 1.5vw, 16px) 0 14px;
 }
 
 .timer-panel {
   display: flex;
+  width: 100%;
   min-width: 0;
   flex-direction: column;
   align-items: center;
@@ -212,7 +316,7 @@ html.native-android .timer-dial {
   --wisp-scale: 1;
   --wisp-color: var(--yellow);
   position: absolute;
-  inset: -34px;
+  inset: -32px;
   z-index: 1;
   display: block;
   overflow: visible;
@@ -222,25 +326,25 @@ html.native-android .timer-dial {
   color: var(--wisp-color);
   background: conic-gradient(
     from 0deg,
-    transparent 0deg 18deg,
-    transparent 18deg 24deg,
-    var(--wisp-color) 33deg,
-    var(--pink) 48deg,
-    transparent 66deg 360deg
+    transparent 0deg 14deg,
+    var(--wisp-color) 22deg,
+    var(--wisp-color) 62deg,
+    var(--pink) 78deg,
+    transparent 94deg 360deg
   );
-  filter: blur(0.45px);
+  filter: blur(0.2px) drop-shadow(0 0 7px var(--wisp-color));
   mix-blend-mode: screen;
   -webkit-mask: radial-gradient(
     farthest-side,
-    transparent calc(100% - 9px),
-    #000 calc(100% - 7px),
+    transparent calc(100% - 11px),
+    #000 calc(100% - 9px),
     #000 calc(100% - 2px),
     transparent calc(100% - 1px)
   );
   mask: radial-gradient(
     farthest-side,
-    transparent calc(100% - 9px),
-    #000 calc(100% - 7px),
+    transparent calc(100% - 11px),
+    #000 calc(100% - 9px),
     #000 calc(100% - 2px),
     transparent calc(100% - 1px)
   );
@@ -253,12 +357,12 @@ html.native-android .timer-dial {
   top: 0;
   left: 50%;
   width: 15px;
-  height: 9px;
+  height: 11px;
   content: "";
   border: 3px solid var(--ink);
   border-radius: 2px;
   background: var(--wisp-color);
-  box-shadow: 0 0 0 2px var(--wisp-color), 0 0 14px var(--wisp-color);
+  box-shadow: 0 0 0 2px var(--wisp-color), 0 0 18px var(--wisp-color);
   transform: translate(-50%, -50%);
 }
 
@@ -266,28 +370,28 @@ html.native-android .timer-dial {
   --wisp-start: 154deg;
   --wisp-scale: 0.94;
   --wisp-color: var(--blue);
-  inset: -46px;
+  inset: -48px;
   opacity: 0;
-  filter: blur(0.8px);
+  filter: blur(0.45px) drop-shadow(0 0 8px var(--wisp-color));
 }
 
 .dial-wisp-two::before {
-  width: 12px;
-  height: 8px;
+  width: 14px;
+  height: 10px;
   border-width: 2px;
-  box-shadow: 0 0 0 1px var(--wisp-color), 0 0 12px var(--wisp-color);
+  box-shadow: 0 0 0 1px var(--wisp-color), 0 0 16px var(--wisp-color);
 }
 
 .dial-rim.is-running .dial-wisp-one {
   animation:
-    dial-wisp-orbit-one 7.2s linear infinite,
-    dial-wisp-breathe 2.8s ease-in-out infinite;
+    dial-wisp-orbit-one 5.4s linear infinite,
+    dial-wisp-breathe 2.4s ease-in-out infinite;
 }
 
 .dial-rim.is-running .dial-wisp-two {
   animation:
-    dial-wisp-orbit-two 9.6s linear infinite,
-    dial-wisp-breathe-two 3.7s ease-in-out infinite;
+    dial-wisp-orbit-two 7.2s linear infinite,
+    dial-wisp-breathe-two 3.1s ease-in-out infinite;
 }
 
 @keyframes dial-wisp-orbit-one {
@@ -313,22 +417,22 @@ html.native-android .timer-dial {
 @keyframes dial-wisp-breathe {
   0%,
   100% {
-    opacity: 0.2;
+    opacity: 0.42;
   }
 
   50% {
-    opacity: 0.58;
+    opacity: 0.86;
   }
 }
 
 @keyframes dial-wisp-breathe-two {
   0%,
   100% {
-    opacity: 0.12;
+    opacity: 0.26;
   }
 
   50% {
-    opacity: 0.38;
+    opacity: 0.62;
   }
 }
 
@@ -367,7 +471,7 @@ html.native-android .timer-dial {
   border: 5px solid var(--ink);
   border-radius: 50%;
   background: conic-gradient(from 0deg, var(--red) var(--progress), var(--paper) 0);
-  box-shadow: 12px 12px 0 var(--ink), -8px -8px 0 var(--pink);
+  box-shadow: 0 0 0 10px var(--ink), 0 0 0 16px var(--pink);
   place-items: center;
   transition: transform 130ms ease;
 }
@@ -492,6 +596,281 @@ html.native-android .timer-dial {
   background: var(--red);
 }
 
+.settings-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  margin: 18px auto 0;
+  padding: 6px 14px 6px 8px;
+  border: 4px solid var(--ink);
+  cursor: pointer;
+  color: var(--cream);
+  background: var(--paper);
+  box-shadow: 4px 4px 0 var(--ink);
+  font-family: Impact, Arial Black, Arial, sans-serif;
+  font-size: 0.92rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  transition: transform 90ms ease, box-shadow 90ms ease;
+}
+
+.settings-button img {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.settings-button:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.settings-button:active {
+  transform: translate(6px, 6px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.settings-button:focus-visible,
+.back-button:focus-visible,
+.theme-option:focus-visible,
+.screensaver-option:focus-visible {
+  outline: 4px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.settings-screen {
+  display: grid;
+  align-content: start;
+  gap: clamp(22px, 4vw, 42px);
+  min-height: calc(100vh - 108px);
+  padding: clamp(8px, 1.5vw, 16px) 0 18px;
+}
+
+.settings-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  align-items: end;
+  gap: 24px;
+  border-bottom: 5px solid var(--line);
+  padding-bottom: 18px;
+}
+
+.back-button {
+  justify-self: start;
+  min-height: 46px;
+  padding: 8px 12px;
+  border: 4px solid var(--ink);
+  cursor: pointer;
+  color: var(--ink);
+  background: var(--yellow);
+  box-shadow: 5px 5px 0 var(--ink);
+  font-family: Impact, Arial Black, Arial, sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  transition: transform 90ms ease, box-shadow 90ms ease;
+}
+
+.back-button:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.back-button:active {
+  transform: translate(5px, 5px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--blue);
+  font-family: Impact, Arial Black, Arial, sans-serif;
+  font-size: clamp(0.76rem, 1.7vw, 1rem);
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
+
+.settings-header h1,
+.settings-section h2 {
+  margin: 0;
+  color: var(--cream);
+  font-family: Impact, Arial Black, Arial, sans-serif;
+  letter-spacing: 0.015em;
+  line-height: 0.92;
+}
+
+.settings-header h1 {
+  font-size: clamp(2.55rem, 7vw, 5.6rem);
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.75fr);
+  align-items: start;
+  gap: clamp(16px, 3vw, 28px);
+}
+
+.settings-section {
+  min-width: 0;
+  padding: clamp(16px, 2vw, 24px);
+  border: 5px solid var(--line);
+  background: var(--paper);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.settings-section-wide {
+  min-height: 100%;
+}
+
+.settings-section h2 {
+  font-size: clamp(1.55rem, 3vw, 2.35rem);
+}
+
+.settings-copy p:last-child {
+  max-width: 46ch;
+  margin: 10px 0 0;
+  color: var(--cream);
+  font-size: 0.96rem;
+  line-height: 1.25;
+}
+
+.screensaver-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.screensaver-option {
+  display: grid;
+  min-width: 0;
+  padding: 0 0 10px;
+  border: 4px solid var(--ink);
+  cursor: pointer;
+  text-align: left;
+  color: var(--cream);
+  background: var(--paper);
+  box-shadow: 5px 5px 0 var(--ink);
+  transition: transform 90ms ease, box-shadow 90ms ease;
+}
+
+.screensaver-option:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.screensaver-option:active {
+  transform: translate(5px, 5px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.screensaver-option.is-selected {
+  box-shadow: 5px 5px 0 var(--blue), inset 0 0 0 5px var(--blue);
+}
+
+.option-art {
+  display: grid;
+  min-height: 118px;
+  place-items: center;
+  overflow: hidden;
+  border-bottom: 4px solid var(--ink);
+  background: var(--deep);
+}
+
+.option-art img {
+  width: 100%;
+  height: 118px;
+  object-fit: contain;
+  filter: saturate(1.15);
+}
+
+.option-label,
+.option-detail {
+  padding-inline: 10px;
+}
+
+.option-label {
+  margin-top: 10px;
+  font-family: Impact, Arial Black, Arial, sans-serif;
+  font-size: 1.18rem;
+  letter-spacing: 0.03em;
+  line-height: 0.96;
+}
+
+.option-detail {
+  margin-top: 4px;
+  color: var(--blue);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.theme-options {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.theme-option {
+  min-height: 52px;
+  border: 4px solid var(--ink);
+  cursor: pointer;
+  text-align: left;
+  color: var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  font-family: Impact, Arial Black, Arial, sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  transition: transform 90ms ease, box-shadow 90ms ease;
+}
+
+.theme-option:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.theme-option:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.theme-option.is-selected {
+  outline: 4px solid var(--blue);
+  outline-offset: -8px;
+}
+
+.theme-dark {
+  color: #fff8e8;
+  background: #15131d;
+}
+
+.theme-light {
+  background: #fff8e8;
+}
+
+.theme-cobalt {
+  color: #f5fbff;
+  background: #0d4db5;
+}
+
+.theme-sunset {
+  color: #fff0d7;
+  background: #7b2048;
+}
+
+.settings-status {
+  margin: 0;
+  padding: 10px 14px;
+  border-left: 8px solid var(--yellow);
+  color: var(--cream);
+  background: var(--paper);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -509,6 +888,42 @@ html.native-android .timer-dial {
 
   .side-panel {
     box-shadow: none;
+  }
+
+  .settings-screen {
+    min-height: calc(100vh - 70px);
+    gap: 22px;
+    padding: 14px 0 16px;
+  }
+
+  .settings-header {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .screensaver-options {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .option-art,
+  .option-art img {
+    min-height: 86px;
+    height: 86px;
+  }
+
+  .option-label {
+    padding-inline: 7px;
+    font-size: 0.94rem;
+  }
+
+  .option-detail {
+    padding-inline: 7px;
+    font-size: 0.58rem;
   }
 }
 
@@ -539,7 +954,7 @@ html.native-android .timer-dial {
   .dial-progress {
     padding: 16px;
     border-width: 4px;
-    box-shadow: 8px 8px 0 var(--ink), -6px -6px 0 var(--pink);
+    box-shadow: 0 0 0 8px var(--ink), 0 0 0 13px var(--pink);
   }
 
   .dial-face {
@@ -583,6 +998,55 @@ html.native-android .timer-dial {
     min-height: 43px;
     padding-block: 6px 4px;
   }
+
+  .settings-screen {
+    min-height: calc(100vh - 70px);
+    padding: 0 0 12px;
+  }
+
+  .settings-header h1 {
+    font-size: clamp(2.4rem, 13vw, 4.2rem);
+  }
+
+  .settings-section {
+    padding: 14px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  .screensaver-options {
+    grid-template-columns: 1fr;
+  }
+
+  .screensaver-option {
+    grid-template-columns: 92px 1fr;
+    grid-template-rows: 1fr auto;
+    min-height: 92px;
+    padding: 0 10px 0 0;
+  }
+
+  .option-art {
+    grid-row: 1 / span 2;
+    min-height: 88px;
+    height: 100%;
+    border-right: 4px solid var(--ink);
+    border-bottom: 0;
+  }
+
+  .option-art img {
+    width: 88px;
+    height: 88px;
+  }
+
+  .option-label {
+    align-self: end;
+    padding-inline: 12px 0;
+    font-size: 1.16rem;
+  }
+
+  .option-detail {
+    padding-inline: 12px 0;
+    padding-bottom: 10px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -595,10 +1059,10 @@ html.native-android .timer-dial {
 
   .dial-rim.is-running .dial-wisp {
     animation: none !important;
-    opacity: 0.26;
+    opacity: 0.5;
   }
 
   .dial-rim.is-running .dial-wisp-two {
-    opacity: 0.16;
+    opacity: 0.34;
   }
 }

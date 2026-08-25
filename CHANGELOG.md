@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.9
+
+- Added a separate Settings screen opened from the small gear button below the
+  quick-load presets.
+- Added three background motion choices inspired by classic screensavers:
+  Bezier, Flowerbox, and 3D Maze. The selected generated artwork drifts and
+  bounces behind the dial only while a countdown is running.
+- Added persistent Dark, Light, Cobalt Night, and Sunset Ink color themes, with
+  dark mode kept as the default.
+- Centered the timer layout and changed the dial's offset shadows to concentric
+  rings so the dial and surrounding traces remain symmetrical.
+
 ## 1.0.8
 
 - Added two subtle, offset pipe-style wisps that orbit the dial only while the

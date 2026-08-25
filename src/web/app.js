@@ -17,6 +17,7 @@ if (nativePlatform === "android") {
 }
 
 const storageKey = "ovo-timer-state-v1";
+const preferencesKey = "ovo-timer-preferences-v1";
 const gestureThreshold = 6;
 const dragOuterPadding = 28;
 const notificationId = 41001;
@@ -28,7 +29,47 @@ const refs = {
   timerValue: document.querySelector("#timerValue"),
   timerCaption: document.querySelector("#timerCaption"),
   liveStatus: document.querySelector("#liveStatus"),
-  presetButtons: Array.from(document.querySelectorAll(".preset"))
+  presetButtons: Array.from(document.querySelectorAll(".preset")),
+  timerScreen: document.querySelector("#timerScreen"),
+  settingsScreen: document.querySelector("#settingsScreen"),
+  settingsButton: document.querySelector("#settingsButton"),
+  backButton: document.querySelector("#backButton"),
+  themeButtons: Array.from(document.querySelectorAll("[data-theme-option]")),
+  screensaverButtons: Array.from(document.querySelectorAll("[data-screensaver]")),
+  settingsStatus: document.querySelector("#settingsStatus"),
+  screensaverLayer: document.querySelector("#screensaverLayer"),
+  screensaverSprite: document.querySelector("#screensaverSprite")
+};
+
+const screensaverModes = {
+  bezier: {
+    label: "Bezier",
+    source: "./assets/screensaver-bezier.png",
+    vx: 0.052,
+    vy: 0.037,
+    rotation: 0.015
+  },
+  flowerbox: {
+    label: "Flowerbox",
+    source: "./assets/screensaver-flowerbox.png",
+    vx: 0.066,
+    vy: 0.043,
+    rotation: -0.018
+  },
+  maze: {
+    label: "3D Maze",
+    source: "./assets/screensaver-maze.png",
+    vx: 0.046,
+    vy: 0.059,
+    rotation: 0.012
+  }
+};
+
+const themeLabels = {
+  dark: "Dark mode",
+  light: "Light mode",
+  cobalt: "Cobalt night",
+  sunset: "Sunset ink"
 };
 
 let totalSeconds = 25 * 60;
@@ -39,6 +80,20 @@ let phase = "idle";
 let dialGesture = null;
 let nativeAlarmRequest = 0;
 let nativeAlarmScheduled = false;
+let currentScreen = "timer";
+let screensaverMode = "flowerbox";
+let theme = "dark";
+let screensaverFrameId = 0;
+let screensaverState = {
+  mode: "",
+  x: 0,
+  y: 0,
+  vx: 0,
+  vy: 0,
+  rotation: 0,
+  lastTime: 0,
+  initialized: false
+};
 
 if (nativePlatform === "android") {
   // Android WebView can retain a blue accessibility/focus frame on slider-like
@@ -48,6 +103,180 @@ if (nativePlatform === "android") {
   document.documentElement.style.setProperty("-webkit-tap-highlight-color", "transparent", "important");
   refs.dialRim.style.setProperty("-webkit-tap-highlight-color", "transparent", "important");
   refs.dial.style.setProperty("-webkit-tap-highlight-color", "transparent", "important");
+}
+
+function savePreferences() {
+  try {
+    localStorage.setItem(preferencesKey, JSON.stringify({ theme, screensaverMode }));
+  } catch {
+    // Preferences are optional; the current selection still applies in memory.
+  }
+}
+
+function updateSettingsStatus() {
+  if (!refs.settingsStatus) {
+    return;
+  }
+
+  refs.settingsStatus.textContent = `${screensaverModes[screensaverMode].label} background selected. ${themeLabels[theme]} selected.`;
+}
+
+function applyTheme(nextTheme, persist = true) {
+  theme = Object.hasOwn(themeLabels, nextTheme) ? nextTheme : "dark";
+  document.documentElement.dataset.theme = theme;
+
+  refs.themeButtons.forEach((button) => {
+    const selected = button.dataset.themeOption === theme;
+    button.setAttribute("aria-pressed", String(selected));
+    button.classList.toggle("is-selected", selected);
+  });
+
+  if (persist) {
+    savePreferences();
+  }
+  updateSettingsStatus();
+}
+
+function applyScreensaverMode(nextMode, persist = true) {
+  screensaverMode = Object.hasOwn(screensaverModes, nextMode) ? nextMode : "flowerbox";
+  const mode = screensaverModes[screensaverMode];
+  screensaverState.initialized = false;
+  screensaverState.mode = screensaverMode;
+
+  if (refs.screensaverSprite) {
+    if (refs.screensaverSprite.getAttribute("src") !== mode.source) {
+      refs.screensaverSprite.src = mode.source;
+    }
+    refs.screensaverSprite.alt = `${mode.label} screensaver animation`;
+  }
+
+  refs.screensaverButtons.forEach((button) => {
+    const selected = button.dataset.screensaver === screensaverMode;
+    button.setAttribute("aria-pressed", String(selected));
+    button.classList.toggle("is-selected", selected);
+  });
+
+  if (persist) {
+    savePreferences();
+  }
+  updateSettingsStatus();
+  syncScreensaver();
+}
+
+function restorePreferences() {
+  let saved = null;
+  try {
+    saved = JSON.parse(localStorage.getItem(preferencesKey) || "null");
+  } catch {
+    saved = null;
+  }
+
+  applyTheme(saved?.theme || "dark", false);
+  applyScreensaverMode(saved?.screensaverMode || "flowerbox", false);
+}
+
+function stopScreensaver() {
+  if (screensaverFrameId) {
+    window.cancelAnimationFrame(screensaverFrameId);
+    screensaverFrameId = 0;
+  }
+  refs.screensaverLayer?.classList.remove("is-active");
+  screensaverState.lastTime = 0;
+}
+
+function resetScreensaverPosition() {
+  if (!refs.screensaverLayer || !refs.screensaverSprite) {
+    return;
+  }
+
+  const layerWidth = refs.screensaverLayer.clientWidth;
+  const layerHeight = refs.screensaverLayer.clientHeight;
+  const spriteWidth = refs.screensaverSprite.offsetWidth || 180;
+  const spriteHeight = refs.screensaverSprite.offsetHeight || spriteWidth;
+  const mode = screensaverModes[screensaverMode];
+
+  screensaverState.mode = screensaverMode;
+  screensaverState.x = Math.max(0, (layerWidth - spriteWidth) * 0.23);
+  screensaverState.y = Math.max(0, (layerHeight - spriteHeight) * 0.18);
+  screensaverState.vx = mode.vx;
+  screensaverState.vy = mode.vy;
+  screensaverState.rotation = 0;
+  screensaverState.initialized = true;
+}
+
+function renderScreensaverFrame(timestamp) {
+  if (phase !== "running" || currentScreen !== "timer") {
+    stopScreensaver();
+    return;
+  }
+
+  if (!screensaverState.initialized || screensaverState.mode !== screensaverMode) {
+    resetScreensaverPosition();
+  }
+
+  const elapsed = screensaverState.lastTime ? Math.min(40, timestamp - screensaverState.lastTime) : 16;
+  screensaverState.lastTime = timestamp;
+  const layerWidth = refs.screensaverLayer.clientWidth;
+  const layerHeight = refs.screensaverLayer.clientHeight;
+  const spriteWidth = refs.screensaverSprite.offsetWidth;
+  const spriteHeight = refs.screensaverSprite.offsetHeight;
+
+  screensaverState.x += screensaverState.vx * elapsed;
+  screensaverState.y += screensaverState.vy * elapsed;
+  screensaverState.rotation += screensaverModes[screensaverMode].rotation * elapsed;
+
+  if (screensaverState.x <= 0 || screensaverState.x + spriteWidth >= layerWidth) {
+    screensaverState.x = clamp(screensaverState.x, 0, Math.max(0, layerWidth - spriteWidth));
+    screensaverState.vx *= -1;
+  }
+  if (screensaverState.y <= 0 || screensaverState.y + spriteHeight >= layerHeight) {
+    screensaverState.y = clamp(screensaverState.y, 0, Math.max(0, layerHeight - spriteHeight));
+    screensaverState.vy *= -1;
+  }
+
+  refs.screensaverSprite.style.transform = `translate3d(${screensaverState.x}px, ${screensaverState.y}px, 0) rotateZ(${screensaverState.rotation}deg)`;
+  screensaverFrameId = window.requestAnimationFrame(renderScreensaverFrame);
+}
+
+function startScreensaver() {
+  if (phase !== "running" || currentScreen !== "timer" || !refs.screensaverLayer || !refs.screensaverSprite) {
+    stopScreensaver();
+    return;
+  }
+
+  if (screensaverFrameId) {
+    return;
+  }
+
+  refs.screensaverLayer.classList.add("is-active");
+  if (!screensaverState.initialized || screensaverState.mode !== screensaverMode) {
+    resetScreensaverPosition();
+  }
+  screensaverFrameId = window.requestAnimationFrame(renderScreensaverFrame);
+}
+
+function syncScreensaver() {
+  if (phase === "running" && currentScreen === "timer") {
+    startScreensaver();
+  } else {
+    stopScreensaver();
+  }
+}
+
+function showScreen(screen) {
+  currentScreen = screen === "settings" ? "settings" : "timer";
+  const settingsVisible = currentScreen === "settings";
+  refs.timerScreen.hidden = settingsVisible;
+  refs.settingsScreen.hidden = !settingsVisible;
+  document.body.classList.toggle("settings-open", settingsVisible);
+  syncScreensaver();
+
+  if (settingsVisible) {
+    refs.backButton?.focus({ preventScroll: true });
+  } else {
+    refs.settingsButton?.focus({ preventScroll: true });
+  }
+  window.scrollTo(0, 0);
 }
 
 function saveState() {
@@ -148,6 +377,7 @@ function render() {
   refs.dial.setAttribute("aria-valuenow", String(totalSeconds));
   refs.dial.setAttribute("aria-valuetext", formatClock(activeSeconds) + (phase === "running" ? " remaining" : " selected"));
   setWindowTitle();
+  syncScreensaver();
 }
 
 function clearIntervalTimer() {
@@ -683,6 +913,18 @@ refs.dial.addEventListener("focus", () => {
     refs.dial.blur();
   }
 });
+refs.settingsButton?.addEventListener("click", () => showScreen("settings"));
+refs.backButton?.addEventListener("click", () => showScreen("timer"));
+refs.themeButtons.forEach((button) => {
+  button.addEventListener("click", () => applyTheme(button.dataset.themeOption));
+});
+refs.screensaverButtons.forEach((button) => {
+  button.addEventListener("click", () => applyScreensaverMode(button.dataset.screensaver));
+});
+refs.screensaverSprite?.addEventListener("load", () => {
+  screensaverState.initialized = false;
+  syncScreensaver();
+});
 window.addEventListener("blur", cancelDialGesture);
 
 window.addEventListener("keydown", (event) => {
@@ -707,5 +949,6 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
+restorePreferences();
 restoreState();
 render();
