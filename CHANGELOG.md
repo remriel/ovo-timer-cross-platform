@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.10
+
+- Removed the two translucent wisp layers, including their blur, glow, and
+  screen blending, so nothing faint surrounds the dial's solid color rings.
+- Kept the selectable Bezier, Flowerbox, and 3D Maze motion behind the timer
+  without adding another visual layer to the dial itself.
+- Tightened the shortcut grid to match the dial width, reduced button height,
+  gaps, borders, shadows, and type, and centered the settings control beneath
+  the cleaner three-by-three layout.
+
 ## 1.0.9
 
 - Added a separate Settings screen opened from the small gear button below the

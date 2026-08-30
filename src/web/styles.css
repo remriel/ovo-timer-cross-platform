@@ -311,131 +311,6 @@ html.native-android .timer-dial {
   inset: -12px;
 }
 
-.dial-wisp {
-  --wisp-start: -28deg;
-  --wisp-scale: 1;
-  --wisp-color: var(--yellow);
-  position: absolute;
-  inset: -32px;
-  z-index: 1;
-  display: block;
-  overflow: visible;
-  border-radius: 50%;
-  opacity: 0;
-  pointer-events: none;
-  color: var(--wisp-color);
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg 14deg,
-    var(--wisp-color) 22deg,
-    var(--wisp-color) 62deg,
-    var(--pink) 78deg,
-    transparent 94deg 360deg
-  );
-  filter: blur(0.2px) drop-shadow(0 0 7px var(--wisp-color));
-  mix-blend-mode: screen;
-  -webkit-mask: radial-gradient(
-    farthest-side,
-    transparent calc(100% - 11px),
-    #000 calc(100% - 9px),
-    #000 calc(100% - 2px),
-    transparent calc(100% - 1px)
-  );
-  mask: radial-gradient(
-    farthest-side,
-    transparent calc(100% - 11px),
-    #000 calc(100% - 9px),
-    #000 calc(100% - 2px),
-    transparent calc(100% - 1px)
-  );
-  transform: rotate(var(--wisp-start)) scale(var(--wisp-scale));
-  will-change: transform, opacity;
-}
-
-.dial-wisp::before {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 15px;
-  height: 11px;
-  content: "";
-  border: 3px solid var(--ink);
-  border-radius: 2px;
-  background: var(--wisp-color);
-  box-shadow: 0 0 0 2px var(--wisp-color), 0 0 18px var(--wisp-color);
-  transform: translate(-50%, -50%);
-}
-
-.dial-wisp-two {
-  --wisp-start: 154deg;
-  --wisp-scale: 0.94;
-  --wisp-color: var(--blue);
-  inset: -48px;
-  opacity: 0;
-  filter: blur(0.45px) drop-shadow(0 0 8px var(--wisp-color));
-}
-
-.dial-wisp-two::before {
-  width: 14px;
-  height: 10px;
-  border-width: 2px;
-  box-shadow: 0 0 0 1px var(--wisp-color), 0 0 16px var(--wisp-color);
-}
-
-.dial-rim.is-running .dial-wisp-one {
-  animation:
-    dial-wisp-orbit-one 5.4s linear infinite,
-    dial-wisp-breathe 2.4s ease-in-out infinite;
-}
-
-.dial-rim.is-running .dial-wisp-two {
-  animation:
-    dial-wisp-orbit-two 7.2s linear infinite,
-    dial-wisp-breathe-two 3.1s ease-in-out infinite;
-}
-
-@keyframes dial-wisp-orbit-one {
-  from {
-    transform: rotate(var(--wisp-start)) scale(var(--wisp-scale));
-  }
-
-  to {
-    transform: rotate(calc(var(--wisp-start) + 360deg)) scale(var(--wisp-scale));
-  }
-}
-
-@keyframes dial-wisp-orbit-two {
-  from {
-    transform: rotate(var(--wisp-start)) scale(var(--wisp-scale));
-  }
-
-  to {
-    transform: rotate(calc(var(--wisp-start) - 360deg)) scale(var(--wisp-scale));
-  }
-}
-
-@keyframes dial-wisp-breathe {
-  0%,
-  100% {
-    opacity: 0.42;
-  }
-
-  50% {
-    opacity: 0.86;
-  }
-}
-
-@keyframes dial-wisp-breathe-two {
-  0%,
-  100% {
-    opacity: 0.26;
-  }
-
-  50% {
-    opacity: 0.62;
-  }
-}
-
 .timer-dial {
   --progress: 0.4167turn;
   position: relative;
@@ -521,7 +396,7 @@ html.native-android .timer-dial {
 }
 
 .side-panel {
-  width: min(100%, 820px);
+  width: min(368px, 68vw);
   justify-self: center;
   border: 0;
   background: transparent;
@@ -529,25 +404,29 @@ html.native-android .timer-dial {
 }
 
 .side-section {
+  display: grid;
   padding: 0;
+  justify-items: center;
 }
 
 .preset-grid {
   display: grid;
+  width: 100%;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 7px;
 }
 
 .preset {
-  min-height: 50px;
-  padding: 8px 2px 5px;
-  border: 4px solid var(--ink);
+  min-height: 46px;
+  padding: 6px 2px 4px;
+  border: 3px solid var(--ink);
+  border-radius: 0;
   cursor: pointer;
   letter-spacing: 0.045em;
   color: var(--ink);
-  box-shadow: 4px 4px 0 var(--ink);
-  font-size: 1.46rem;
-  line-height: 0.72;
+  box-shadow: 3px 3px 0 var(--ink);
+  font-size: 1.34rem;
+  line-height: 0.7;
   transition: transform 90ms ease, box-shadow 90ms ease;
 }
 
@@ -570,7 +449,7 @@ html.native-android .timer-dial {
 
 .preset span {
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.61rem;
   font-weight: 900;
   letter-spacing: 0.08em;
 }
@@ -951,6 +830,10 @@ html.native-android .timer-dial {
     width: min(336px, 78vw);
   }
 
+  .side-panel {
+    width: min(336px, 78vw);
+  }
+
   .dial-progress {
     padding: 16px;
     border-width: 4px;
@@ -995,8 +878,8 @@ html.native-android .timer-dial {
   }
 
   .preset {
-    min-height: 43px;
-    padding-block: 6px 4px;
+    min-height: 40px;
+    padding-block: 5px 3px;
   }
 
   .settings-screen {
@@ -1057,12 +940,4 @@ html.native-android .timer-dial {
     transition-duration: 0.001ms !important;
   }
 
-  .dial-rim.is-running .dial-wisp {
-    animation: none !important;
-    opacity: 0.5;
-  }
-
-  .dial-rim.is-running .dial-wisp-two {
-    opacity: 0.34;
-  }
 }

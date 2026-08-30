@@ -52,17 +52,12 @@ test("renders full duration orbits without an offset shadow or conic seam", () =
   assert.match(app, /classList\.toggle\("is-inner-full", trace\.inner >= 1\)/);
 });
 
-test("runs the subtle pipe-style wisps only while the countdown is active", () => {
-  assert.match(html, /class="dial-wisp dial-wisp-one" aria-hidden="true"/);
-  assert.match(html, /class="dial-wisp dial-wisp-two" aria-hidden="true"/);
-  assert.match(app, /classList\.toggle\("is-running", phase === "running"\)/);
-  assert.match(styles, /\.dial-rim\.is-running \.dial-wisp-one/);
-  assert.match(styles, /var\(--wisp-color\) 62deg/);
-  assert.match(styles, /opacity: 0\.86/);
-  assert.match(styles, /drop-shadow\(0 0 7px var\(--wisp-color\)\)/);
-  assert.match(styles, /@keyframes dial-wisp-orbit-one/);
-  assert.match(styles, /@keyframes dial-wisp-orbit-two/);
-  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)/);
+test("keeps only crisp opaque rings around the dial", () => {
+  assert.doesNotMatch(html, /dial-wisp/);
+  assert.doesNotMatch(styles, /\.dial-wisp/);
+  assert.doesNotMatch(styles, /mix-blend-mode:\s*screen/);
+  assert.match(styles, /\.dial-progress\s*\{[^}]*box-shadow:\s*0 0 0 10px var\(--ink\), 0 0 0 16px var\(--pink\)/s);
+  assert.match(styles, /\.dial-face\s*\{[^}]*box-shadow:\s*inset 0 0 0 7px var\(--blue\)/s);
 });
 
 test("keeps the selected screensaver behind the timer and moves it only while running", () => {
@@ -82,5 +77,8 @@ test("keeps the dial and shortcut layout centered", () => {
   assert.match(styles, /\.timer-layout\s*\{[^}]*justify-items:\s*center/s);
   assert.match(styles, /\.dial-zone\s*\{[^}]*place-items:\s*center/s);
   assert.match(styles, /\.dial-progress\s*\{[^}]*box-shadow:\s*0 0 0 10px var\(--ink\), 0 0 0 16px var\(--pink\)/s);
+  assert.match(styles, /\.side-panel\s*\{[^}]*width:\s*min\(368px, 68vw\)/s);
   assert.match(styles, /\.preset-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3, 1fr\)/s);
+  assert.match(styles, /\.preset-grid\s*\{[^}]*gap:\s*7px/s);
+  assert.match(styles, /\.preset\s*\{[^}]*min-height:\s*46px/s);
 });

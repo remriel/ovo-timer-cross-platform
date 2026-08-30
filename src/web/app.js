@@ -367,7 +367,6 @@ function render() {
   refs.dial.style.setProperty("--progress", progress + "turn");
   refs.dialRim.style.setProperty("--trace-outer", trace.outer + "turn");
   refs.dialRim.style.setProperty("--trace-inner", trace.inner + "turn");
-  refs.dialRim.classList.toggle("is-running", phase === "running");
   refs.dialRim.classList.toggle("is-outer-full", trace.outer >= 1);
   refs.dialRim.classList.toggle("is-inner-full", trace.inner >= 1);
   refs.dial.dataset.phase = phase;

@@ -2,10 +2,9 @@
 
 ## Objective
 
-Add a separate Settings screen to the Ovo Timer with three selectable
-screensaver-style background animations and several persistent color themes.
-The chosen artwork should drift behind the dial only while a countdown runs;
-the timer and its drag surface must stay centered, symmetrical, and interactive.
+Remove the faint translucent halo surrounding the dial's solid borders, make
+the shortcut buttons more compact and visually balanced, verify both changes
+at an Android-sized viewport, and publish native Android version 1.0.10.
 
 ## Implementation state
 
@@ -16,42 +15,48 @@ the timer and its drag surface must stay centered, symmetrical, and interactive.
   screen, so it never sits above the dial or captures input.
 - Added a separate Settings screen with mode cards and a Dark, Light, Cobalt
   Night, and Sunset Ink palette picker. Choices persist in local storage.
-- Kept the original dial wisps as a rim-only reduced-motion-safe accent, while
-  replacing the dial's offset shadows with concentric rings for symmetry.
+- Removed the two old dial-wisp elements and all related blur, drop-shadow,
+  screen-blend, opacity, animation, and reduced-motion styling. The dial now
+  contains only crisp solid ring and duration-trace layers.
+- Kept the generated screensaver artwork behind the timer; it remains separate
+  from the dial and cannot capture pointer input.
+- Constrained the shortcut panel to the dial width, tightened its three-column
+  gaps and button geometry, and centered the settings control below it.
 - Kept the nine quick-load presets, automatic preset/manual-drag start, alarm,
   Android focus suppression, and two-lap 60-minute hard stop behavior intact.
 
 ## Verification
 
-- UI contract tests cover preset durations, auto-start behavior, separate
-  settings navigation, theme options, background layering, and centered dial
-  layout. Run `npm run check` after the final source sync.
-- Run the browser smoke flow at desktop and mobile sizes: open Settings,
-  switch each screensaver and theme, return to the timer, tap a preset, and
-  confirm the sprite is visible behind the dial only while running.
-- `npm run check`: 16 tests passed.
+- UI contract tests cover preset durations, auto-start behavior, settings,
+  themes, background layering, centered geometry, and the absence of dial-wisp
+  or screen-blend halo layers.
+- `npm run check`: 16 tests passed for version 1.0.10.
+- Final Android-sized running-state visual check captured at
+  `output/playwright/android-v1.0.10-compact-no-halo.png`; the colored dial
+  rings remain crisp, the old translucent wisps are absent, and the compact
+  shortcut grid is centered beneath the dial.
 - Shared bundle was synced into the native Android WebView with
   `npm run android:sync` and the generated PNGs are present in
   `android/app/src/main/assets/public/assets/`.
 - `npm run android:apk` completed with JDK 21 after the machine's default Java
   8/17 runtimes were rejected by the Gradle source target. No Android emulator
   was available in this environment for an on-device screenshot pass.
+- Version 1.0.10 also built successfully with JDK 21; its APK is 21,828,352
+  bytes and contains the corrected local `index.html`, `app.js`, `styles.css`,
+  settings gear, and all three screensaver assets.
 - `npm run build:windows` completed and produced the 1.0.9 installer and
   portable executable.
 
 ## Release state
 
-- Published GitHub release [`v1.0.9`](https://github.com/remriel/ovo-timer-cross-platform/releases/tag/v1.0.9)
-  with the Android APK, Windows installer, portable EXE, and checksum file.
-- Uploaded the Android APK to [Google Drive](https://drive.google.com/file/d/1DJ9csr_orw7XsA72t-1z2udDnBIFIA_0/view?usp=drivesdk)
-  as owner-only by default.
-- The source and release artifacts are synchronized at commit `5bae051` plus
-  this release handoff update.
+- [`v1.0.9`](https://github.com/remriel/ovo-timer-cross-platform/releases/tag/v1.0.9)
+  is the last published GitHub and Drive build.
+- Version 1.0.10 is pending its Android build, GitHub release, and Drive upload.
 - Local artifacts are copied to the workspace `outputs/` folder:
   `OvoTimer-Android-1.0.9-debug.apk`, `OvoTimer-Setup-1.0.9-x64.exe`,
   `OvoTimer-Portable-1.0.9-x64.exe`, and `SHA256SUMS-1.0.9.txt`.
 
-## Final handoff
+## Previous release reference
 
 - GitHub release assets: Android APK, Windows x64 installer, Windows x64
   portable build, and `SHA256SUMS-1.0.9.txt`.
@@ -64,3 +69,11 @@ the timer and its drag surface must stay centered, symmetrical, and interactive.
   `FE930651A129B121559263B5BA2812239E6171B276483F805E037ABB955404B0`.
 - Native emulator smoke testing remains unavailable because this machine has
   no Android device or configured AVD; build and asset sync completed.
+
+## Next steps
+
+1. Sync the corrected shared bundle into Android and build the 1.0.10 APK with
+   JDK 21.
+2. Copy and hash the APK, commit and push the source, publish GitHub release
+   v1.0.10, and upload the APK to Google Drive.
+3. Update this handoff with final artifact links and verification results.
