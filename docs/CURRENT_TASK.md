@@ -2,24 +2,23 @@
 
 ## Objective
 
-Remove the faint translucent halo surrounding the dial's solid borders, make
-the shortcut buttons more compact and visually balanced, verify both changes
-at an Android-sized viewport, and publish native Android version 1.0.10.
+Make the two duration traces close only at their exact 30:00 and 60:00
+boundaries, remove the screensaver background feature completely, and expand
+Settings to eight mostly pink-free color schemes for native Android 1.0.11.
 
 ## Implementation state
 
-- Added production PNG artwork in `assets/` for Bezier, Flowerbox, and 3D Maze
-  background modes plus the small settings gear.
-- Added a pointer-free, requestAnimationFrame-driven sprite layer that bounces
-  inside the app shell while `phase === "running"` and pauses on the Settings
-  screen, so it never sits above the dial or captures input.
-- Added a separate Settings screen with mode cards and a Dark, Light, Cobalt
-  Night, and Sunset Ink palette picker. Choices persist in local storage.
+- Removed the screensaver layer, all three selectors, animation state and frame
+  loop, persisted mode, CSS, documentation, tests, and generated artwork.
+- Settings now contains eight persistent theme choices: Dark, Light, Cobalt,
+  Acid, Ocean, Ember, Forest, and Monochrome.
 - Removed the two old dial-wisp elements and all related blur, drop-shadow,
   screen-blend, opacity, animation, and reduced-motion styling. The dial now
   contains only crisp solid ring and duration-trace layers.
-- Kept the generated screensaver artwork behind the timer; it remains separate
-  from the dial and cannot capture pointer input.
+- Replaced the interface pink token, outer dial ring, and two pink preset blocks
+  with orange; the active UI palette no longer uses pink.
+- Capped incomplete laps at 359/360 of a turn, leaving a visible one-degree
+  seam until the exact 30:00 or 60:00 boundary closes the circle.
 - Constrained the shortcut panel to the dial width, tightened its three-column
   gaps and button geometry, and centered the settings control below it.
 - Kept the nine quick-load presets, automatic preset/manual-drag start, alarm,
@@ -27,34 +26,32 @@ at an Android-sized viewport, and publish native Android version 1.0.10.
 
 ## Verification
 
-- UI contract tests cover preset durations, auto-start behavior, settings,
-  themes, background layering, centered geometry, and the absence of dial-wisp
-  or screen-blend halo layers.
-- `npm run check`: 16 tests passed for version 1.0.10.
-- Final Android-sized running-state visual check captured at
-  `output/playwright/android-v1.0.10-compact-no-halo.png`; the colored dial
-  rings remain crisp, the old translucent wisps are absent, and the compact
-  shortcut grid is centered beneath the dial.
+- `npm run check`: 16/16 tests passed. Regression coverage includes incomplete
+  29:59 and 59:59 laps, exact 30:00 and 60:00 closure, eight themes, no
+  screensaver runtime, and no pink interface token.
+- Android-sized Playwright checks passed with no browser-console errors:
+  `output/playwright/android-v1.0.11-5959-seam.png`,
+  `android-v1.0.11-6000-full.png`, and `android-v1.0.11-themes.png`.
 - Shared bundle was synced into the native Android WebView with
   `npm run android:sync` and the generated PNGs are present in
   `android/app/src/main/assets/public/assets/`.
 - `npm run android:apk` completed with JDK 21 after the machine's default Java
   8/17 runtimes were rejected by the Gradle source target. No Android emulator
   was available in this environment for an on-device screenshot pass.
-- Version 1.0.10 also built successfully with JDK 21; its APK is 21,828,352
-  bytes and contains the corrected local `index.html`, `app.js`, `styles.css`,
-  settings gear, and all three screensaver assets.
+- Version 1.0.11 built successfully with JDK 21. The APK is 16,007,340 bytes,
+  includes the app bundle and alarm audio, and contains no screensaver assets.
+- APK SHA-256:
+  `AA9065D2A1311ED1D61F54FFD9ABA3C88938183BD7A837DD665AEB15D24C1EC3`.
 - `npm run build:windows` completed and produced the 1.0.9 installer and
   portable executable.
 
 ## Release state
 
-- Published [`v1.0.10`](https://github.com/remriel/ovo-timer-cross-platform/releases/tag/v1.0.10)
-  with the corrected native Android APK and its SHA-256 checksum.
-- Uploaded the 1.0.10 APK to [Google Drive](https://drive.google.com/file/d/10sHp3MzoR1wEfmMTIB5xZFFuSTb6KNFb/view?usp=drivesdk);
-  Google reports it as owner-only by default.
-- Local artifacts are copied to the workspace `outputs/` folder:
-  `OvoTimer-Android-1.0.10-debug.apk` and `SHA256SUMS-1.0.10.txt`.
+- [`v1.0.10`](https://github.com/remriel/ovo-timer-cross-platform/releases/tag/v1.0.10)
+  is the last published GitHub and Drive build.
+- Local artifacts are in the workspace `outputs/` folder:
+  `OvoTimer-Android-1.0.11-debug.apk` and `SHA256SUMS-1.0.11.txt`.
+- Version 1.0.11 is pending GitHub publication and Drive upload.
 
 ## Previous release reference
 
@@ -70,7 +67,7 @@ at an Android-sized viewport, and publish native Android version 1.0.10.
 - Native emulator smoke testing remains unavailable because this machine has
   no Android device or configured AVD; build and asset sync completed.
 
-## Final handoff
+## Previous release handoff
 
 - Source commit: `f76416b`.
 - APK size: 21,828,352 bytes.

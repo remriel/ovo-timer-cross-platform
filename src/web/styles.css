@@ -7,7 +7,7 @@
   --blue: #1650ff;
   --yellow: #ffd30a;
   --red: #ff3b30;
-  --pink: #ff4ba0;
+  --orange: #ff7a00;
   --green: #8bdd55;
   --shadow: 7px 7px 0 var(--blue);
   --shell: rgba(9, 10, 16, 0.96);
@@ -28,8 +28,8 @@ html[data-theme="light"] {
   --deep: #e8e0d2;
   --blue: #1650ff;
   --yellow: #ffd30a;
-  --red: #ff3b30;
-  --pink: #ff4ba0;
+  --red: #e03131;
+  --orange: #e85d04;
   --green: #72cf36;
   --shell: rgba(255, 248, 232, 0.95);
   --backdrop-overlay: rgba(255, 248, 232, 0.72);
@@ -47,8 +47,8 @@ html[data-theme="cobalt"] {
   --deep: #071426;
   --blue: #35a7ff;
   --yellow: #ffe54d;
-  --red: #ff5a62;
-  --pink: #c884ff;
+  --red: #ff5a3d;
+  --orange: #ff8c1a;
   --green: #71e2c2;
   --shell: rgba(7, 20, 38, 0.95);
   --backdrop-overlay: rgba(2, 8, 20, 0.78);
@@ -58,21 +58,97 @@ html[data-theme="cobalt"] {
   color-scheme: dark;
 }
 
-html[data-theme="sunset"] {
-  --ink: #0d050a;
-  --paper: #2c1320;
-  --cream: #fff0d7;
-  --line: #fff0d7;
-  --deep: #1a0d17;
-  --blue: #ff7d3d;
-  --yellow: #ffd166;
-  --red: #ff4d6d;
-  --pink: #ff7eb6;
-  --green: #b8de67;
-  --shell: rgba(26, 13, 23, 0.95);
-  --backdrop-overlay: rgba(20, 5, 15, 0.75);
+html[data-theme="acid"] {
+  --ink: #050505;
+  --paper: #151515;
+  --cream: #f7ffdc;
+  --line: #c7ff00;
+  --deep: #050505;
+  --blue: #00d9ff;
+  --yellow: #e6ff00;
+  --red: #ff4d00;
+  --orange: #ff8a00;
+  --green: #71ff00;
+  --shell: rgba(8, 8, 8, 0.96);
+  --backdrop-overlay: rgba(0, 0, 0, 0.78);
   --trace-color: var(--yellow);
-  --on-blue: #0d050a;
+  --on-blue: #050505;
+  color: var(--cream);
+  color-scheme: dark;
+}
+
+html[data-theme="ocean"] {
+  --ink: #02131a;
+  --paper: #063444;
+  --cream: #e9fffb;
+  --line: #75f4e8;
+  --deep: #011d28;
+  --blue: #00a8e8;
+  --yellow: #ffd166;
+  --red: #ff5a36;
+  --orange: #ff8c42;
+  --green: #39d98a;
+  --shell: rgba(1, 29, 40, 0.95);
+  --backdrop-overlay: rgba(0, 20, 30, 0.76);
+  --trace-color: var(--yellow);
+  --on-blue: #02131a;
+  color: var(--cream);
+  color-scheme: dark;
+}
+
+html[data-theme="ember"] {
+  --ink: #0b0806;
+  --paper: #2c1c14;
+  --cream: #fff2d6;
+  --line: #ffb347;
+  --deep: #160d08;
+  --blue: #ff6b00;
+  --yellow: #ffd166;
+  --red: #ff3b1f;
+  --orange: #ff8a00;
+  --green: #d4e157;
+  --shell: rgba(22, 13, 8, 0.95);
+  --backdrop-overlay: rgba(15, 7, 3, 0.76);
+  --trace-color: var(--yellow);
+  --on-blue: #0b0806;
+  color: var(--cream);
+  color-scheme: dark;
+}
+
+html[data-theme="forest"] {
+  --ink: #04110b;
+  --paper: #153326;
+  --cream: #f4f1de;
+  --line: #a7c957;
+  --deep: #081c15;
+  --blue: #2a9d8f;
+  --yellow: #e9c46a;
+  --red: #e76f51;
+  --orange: #f4a261;
+  --green: #80b918;
+  --shell: rgba(8, 28, 21, 0.95);
+  --backdrop-overlay: rgba(3, 18, 12, 0.76);
+  --trace-color: var(--yellow);
+  --on-blue: #04110b;
+  color: var(--cream);
+  color-scheme: dark;
+}
+
+html[data-theme="mono"] {
+  --ink: #000000;
+  --paper: #1c1c1c;
+  --cream: #ffffff;
+  --line: #ffffff;
+  --deep: #080808;
+  --blue: #bfbfbf;
+  --yellow: #ffffff;
+  --red: #8c8c8c;
+  --orange: #d0d0d0;
+  --green: #6e6e6e;
+  --shell: rgba(8, 8, 8, 0.96);
+  --backdrop-overlay: rgba(0, 0, 0, 0.8);
+  --trace-color: var(--yellow);
+  --on-blue: #000000;
   color: var(--cream);
   color-scheme: dark;
 }
@@ -141,32 +217,6 @@ button {
 
 .app-screen[hidden] {
   display: none;
-}
-
-.screensaver-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 300ms ease;
-}
-
-.screensaver-layer.is-active {
-  opacity: 0.38;
-}
-
-.screensaver-sprite {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: clamp(132px, 22vw, 236px);
-  max-width: none;
-  height: auto;
-  transform: translate3d(0, 0, 0);
-  filter: saturate(1.18) drop-shadow(14px 16px 0 rgba(0, 0, 0, 0.22));
-  will-change: transform;
 }
 
 .timer-panel,
@@ -346,7 +396,7 @@ html.native-android .timer-dial {
   border: 5px solid var(--ink);
   border-radius: 50%;
   background: conic-gradient(from 0deg, var(--red) var(--progress), var(--paper) 0);
-  box-shadow: 0 0 0 10px var(--ink), 0 0 0 16px var(--pink);
+  box-shadow: 0 0 0 10px var(--ink), 0 0 0 16px var(--orange);
   place-items: center;
   transition: transform 130ms ease;
 }
@@ -463,8 +513,8 @@ html.native-android .timer-dial {
   background: var(--yellow);
 }
 
-.preset-pink {
-  background: var(--pink);
+.preset-orange {
+  background: var(--orange);
 }
 
 .preset-green {
@@ -513,8 +563,7 @@ html.native-android .timer-dial {
 
 .settings-button:focus-visible,
 .back-button:focus-visible,
-.theme-option:focus-visible,
-.screensaver-option:focus-visible {
+.theme-option:focus-visible {
   outline: 4px solid var(--blue);
   outline-offset: 3px;
 }
@@ -585,8 +634,10 @@ html.native-android .timer-dial {
 
 .settings-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.75fr);
+  width: min(100%, 760px);
+  grid-template-columns: 1fr;
   align-items: start;
+  justify-self: center;
   gap: clamp(16px, 3vw, 28px);
 }
 
@@ -596,10 +647,6 @@ html.native-android .timer-dial {
   border: 5px solid var(--line);
   background: var(--paper);
   box-shadow: 8px 8px 0 var(--ink);
-}
-
-.settings-section-wide {
-  min-height: 100%;
 }
 
 .settings-section h2 {
@@ -614,80 +661,9 @@ html.native-android .timer-dial {
   line-height: 1.25;
 }
 
-.screensaver-options {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.screensaver-option {
-  display: grid;
-  min-width: 0;
-  padding: 0 0 10px;
-  border: 4px solid var(--ink);
-  cursor: pointer;
-  text-align: left;
-  color: var(--cream);
-  background: var(--paper);
-  box-shadow: 5px 5px 0 var(--ink);
-  transition: transform 90ms ease, box-shadow 90ms ease;
-}
-
-.screensaver-option:hover {
-  transform: translate(2px, 2px);
-  box-shadow: 3px 3px 0 var(--ink);
-}
-
-.screensaver-option:active {
-  transform: translate(5px, 5px);
-  box-shadow: 0 0 0 var(--ink);
-}
-
-.screensaver-option.is-selected {
-  box-shadow: 5px 5px 0 var(--blue), inset 0 0 0 5px var(--blue);
-}
-
-.option-art {
-  display: grid;
-  min-height: 118px;
-  place-items: center;
-  overflow: hidden;
-  border-bottom: 4px solid var(--ink);
-  background: var(--deep);
-}
-
-.option-art img {
-  width: 100%;
-  height: 118px;
-  object-fit: contain;
-  filter: saturate(1.15);
-}
-
-.option-label,
-.option-detail {
-  padding-inline: 10px;
-}
-
-.option-label {
-  margin-top: 10px;
-  font-family: Impact, Arial Black, Arial, sans-serif;
-  font-size: 1.18rem;
-  letter-spacing: 0.03em;
-  line-height: 0.96;
-}
-
-.option-detail {
-  margin-top: 4px;
-  color: var(--blue);
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 0.7rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-}
-
 .theme-options {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin-top: 20px;
 }
@@ -734,9 +710,29 @@ html.native-android .timer-dial {
   background: #0d4db5;
 }
 
-.theme-sunset {
-  color: #fff0d7;
-  background: #7b2048;
+.theme-acid {
+  color: #e6ff00;
+  background: #151515;
+}
+
+.theme-ocean {
+  color: #e9fffb;
+  background: #063444;
+}
+
+.theme-ember {
+  color: #fff2d6;
+  background: #9e3100;
+}
+
+.theme-forest {
+  color: #f4f1de;
+  background: #153326;
+}
+
+.theme-mono {
+  color: #ffffff;
+  background: #1c1c1c;
 }
 
 .settings-status {
@@ -783,27 +779,6 @@ html.native-android .timer-dial {
   .settings-grid {
     grid-template-columns: 1fr;
   }
-
-  .screensaver-options {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-  }
-
-  .option-art,
-  .option-art img {
-    min-height: 86px;
-    height: 86px;
-  }
-
-  .option-label {
-    padding-inline: 7px;
-    font-size: 0.94rem;
-  }
-
-  .option-detail {
-    padding-inline: 7px;
-    font-size: 0.58rem;
-  }
 }
 
 @media (max-width: 540px) {
@@ -837,7 +812,7 @@ html.native-android .timer-dial {
   .dial-progress {
     padding: 16px;
     border-width: 4px;
-    box-shadow: 0 0 0 8px var(--ink), 0 0 0 13px var(--pink);
+    box-shadow: 0 0 0 8px var(--ink), 0 0 0 13px var(--orange);
   }
 
   .dial-face {
@@ -894,41 +869,6 @@ html.native-android .timer-dial {
   .settings-section {
     padding: 14px;
     box-shadow: 6px 6px 0 var(--ink);
-  }
-
-  .screensaver-options {
-    grid-template-columns: 1fr;
-  }
-
-  .screensaver-option {
-    grid-template-columns: 92px 1fr;
-    grid-template-rows: 1fr auto;
-    min-height: 92px;
-    padding: 0 10px 0 0;
-  }
-
-  .option-art {
-    grid-row: 1 / span 2;
-    min-height: 88px;
-    height: 100%;
-    border-right: 4px solid var(--ink);
-    border-bottom: 0;
-  }
-
-  .option-art img {
-    width: 88px;
-    height: 88px;
-  }
-
-  .option-label {
-    align-self: end;
-    padding-inline: 12px 0;
-    font-size: 1.16rem;
-  }
-
-  .option-detail {
-    padding-inline: 12px 0;
-    padding-bottom: 10px;
   }
 }
 

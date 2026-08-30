@@ -60,7 +60,9 @@ test("keeps the ring relative to the 60-minute dial while counting down", () => 
 test("maps time onto two thirty-minute duration laps", () => {
   assert.deepEqual(doubleLapProgress(0), { outer: 0, inner: 0 });
   assert.deepEqual(doubleLapProgress(15 * 60), { outer: 0.5, inner: 0 });
+  assert.deepEqual(doubleLapProgress(30 * 60 - 1), { outer: 359 / 360, inner: 0 });
   assert.deepEqual(doubleLapProgress(30 * 60), { outer: 1, inner: 0 });
   assert.deepEqual(doubleLapProgress(45 * 60), { outer: 1, inner: 0.5 });
+  assert.deepEqual(doubleLapProgress(MAX_SECONDS - 1), { outer: 1, inner: 359 / 360 });
   assert.deepEqual(doubleLapProgress(MAX_SECONDS), { outer: 1, inner: 1 });
 });

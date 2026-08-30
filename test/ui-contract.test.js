@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
 const webRoot = new URL("../src/web/", import.meta.url);
@@ -27,19 +27,29 @@ test("starts a manually dragged duration whenever the pointer gesture ends", () 
   assert.match(app, /addEventListener\("pointercancel", finishDialGesture\)/);
 });
 
-test("keeps settings on a separate screen with persistent color themes", () => {
+test("keeps theme-only settings on a separate screen with eight persistent colorways", () => {
   assert.match(html, /id="settingsButton"/);
   assert.match(html, /id="settingsScreen"[^>]*hidden/);
   assert.match(html, /data-theme-option="dark"/);
   assert.match(html, /data-theme-option="light"/);
   assert.match(html, /data-theme-option="cobalt"/);
-  assert.match(html, /data-theme-option="sunset"/);
+  assert.match(html, /data-theme-option="acid"/);
+  assert.match(html, /data-theme-option="ocean"/);
+  assert.match(html, /data-theme-option="ember"/);
+  assert.match(html, /data-theme-option="forest"/);
+  assert.match(html, /data-theme-option="mono"/);
+  assert.doesNotMatch(html, /data-screensaver|screensaverLayer|PICK A SCREENSAVER/);
+  assert.doesNotMatch(app, /screensaverMode|startScreensaver|renderScreensaverFrame/);
   assert.match(app, /const preferencesKey = "ovo-timer-preferences-v1"/);
   assert.match(app, /function applyTheme\(nextTheme, persist = true\)/);
   assert.match(app, /function showScreen\(screen\)/);
   assert.match(styles, /html\[data-theme="light"\]/);
   assert.match(styles, /html\[data-theme="cobalt"\]/);
-  assert.match(styles, /html\[data-theme="sunset"\]/);
+  assert.match(styles, /html\[data-theme="acid"\]/);
+  assert.match(styles, /html\[data-theme="ocean"\]/);
+  assert.match(styles, /html\[data-theme="ember"\]/);
+  assert.match(styles, /html\[data-theme="forest"\]/);
+  assert.match(styles, /html\[data-theme="mono"\]/);
   assert.match(styles, /color-scheme:\s*dark/);
   assert.match(styles, /color-scheme:\s*light/);
 });
@@ -56,27 +66,24 @@ test("keeps only crisp opaque rings around the dial", () => {
   assert.doesNotMatch(html, /dial-wisp/);
   assert.doesNotMatch(styles, /\.dial-wisp/);
   assert.doesNotMatch(styles, /mix-blend-mode:\s*screen/);
-  assert.match(styles, /\.dial-progress\s*\{[^}]*box-shadow:\s*0 0 0 10px var\(--ink\), 0 0 0 16px var\(--pink\)/s);
+  assert.doesNotMatch(styles, /--pink|var\(--pink\)|preset-pink/);
+  assert.match(styles, /\.dial-progress\s*\{[^}]*box-shadow:\s*0 0 0 10px var\(--ink\), 0 0 0 16px var\(--orange\)/s);
   assert.match(styles, /\.dial-face\s*\{[^}]*box-shadow:\s*inset 0 0 0 7px var\(--blue\)/s);
 });
 
-test("keeps the selected screensaver behind the timer and moves it only while running", () => {
-  assert.match(html, /id="screensaverLayer" class="screensaver-layer"/);
-  assert.match(html, /data-screensaver="bezier"/);
-  assert.match(html, /data-screensaver="flowerbox"/);
-  assert.match(html, /data-screensaver="maze"/);
-  assert.match(app, /function startScreensaver\(\)/);
-  assert.match(app, /phase !== "running" \|\| currentScreen !== "timer"/);
-  assert.match(app, /requestAnimationFrame\(renderScreensaverFrame\)/);
-  assert.match(styles, /\.screensaver-layer\s*\{[^}]*z-index:\s*0/s);
-  assert.match(styles, /\.app-screen\s*\{[^}]*z-index:\s*2/s);
-  assert.match(styles, /\.screensaver-layer\.is-active\s*\{[^}]*opacity:/s);
+test("removes the screensaver feature and its moving background layer", () => {
+  assert.doesNotMatch(html, /screensaver|flowerbox|bezier|3D MAZE/i);
+  assert.doesNotMatch(app, /screensaver|requestAnimationFrame/i);
+  assert.doesNotMatch(styles, /screensaver|option-art|option-detail/i);
+  assert.equal(existsSync(new URL("../assets/screensaver-bezier.png", import.meta.url)), false);
+  assert.equal(existsSync(new URL("../assets/screensaver-flowerbox.png", import.meta.url)), false);
+  assert.equal(existsSync(new URL("../assets/screensaver-maze.png", import.meta.url)), false);
 });
 
 test("keeps the dial and shortcut layout centered", () => {
   assert.match(styles, /\.timer-layout\s*\{[^}]*justify-items:\s*center/s);
   assert.match(styles, /\.dial-zone\s*\{[^}]*place-items:\s*center/s);
-  assert.match(styles, /\.dial-progress\s*\{[^}]*box-shadow:\s*0 0 0 10px var\(--ink\), 0 0 0 16px var\(--pink\)/s);
+  assert.match(styles, /\.dial-progress\s*\{[^}]*box-shadow:\s*0 0 0 10px var\(--ink\), 0 0 0 16px var\(--orange\)/s);
   assert.match(styles, /\.side-panel\s*\{[^}]*width:\s*min\(368px, 68vw\)/s);
   assert.match(styles, /\.preset-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3, 1fr\)/s);
   assert.match(styles, /\.preset-grid\s*\{[^}]*gap:\s*7px/s);

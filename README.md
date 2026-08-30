@@ -21,10 +21,8 @@ and is not affiliated with Ilumbo.
 - Set a countdown from 10 seconds to 60 minutes by dragging the visible
   colored progress band around the clock.
 - Follow a two-lap duration trace around the dial: 30 minutes fills the first
-  orbit, 60 minutes fills both, and the trace empties with the remaining time.
-- While running, a selected screensaver-style artwork drifts and bounces in the
-  background behind the dial. Choose Bezier, Flowerbox, or 3D Maze in Settings;
-  the artwork never owns pointer input or covers the timer face.
+  orbit, 60 minutes fills both, and each orbit keeps a visible final seam until
+  its exact 30:00 or 60:00 boundary. The trace empties with the remaining time.
 - Tap the inner clock face to start or pause. Releasing a progress-band drag
   starts the newly selected countdown; Space pauses/resumes and R resets.
 - Choose 1, 2, 3, 5, 10, 15, 20, 30, or 45-minute presets from a compact
@@ -35,8 +33,8 @@ and is not affiliated with Ilumbo.
   or the screen is locked. It loops alarm-volume sound and vibration until you
   press `STOP ALARM` (allow Android's requested alarm access when prompted).
 - Open the separate Settings screen from the small gear button at the bottom of
-  the timer. Choose Dark, Light, Cobalt Night, or Sunset Ink; the selected
-  palette and screensaver are saved locally on the device.
+  the timer. Choose Dark, Light, Cobalt Night, Acid Signal, Deep Ocean, Hot
+  Ember, Night Forest, or Monochrome. The selected palette is saved locally.
 - Run the exact same responsive experience on Windows and Android, with dark
   mode as the default.
 
@@ -54,6 +52,7 @@ written under `android/app/build/outputs/apk/debug/`.
 
 ## Design
 
-The production artwork in `assets/` was generated specifically for this
-project. The application uses a colorful neo-brutalist print system: hard
-black outlines, offset shadows, vivid flat colors, and screenprint texture.
+The production backdrop, icon, and settings artwork in `assets/` were created
+specifically for this project. The application uses a colorful neo-brutalist
+print system: hard black outlines, offset shadows, vivid flat colors, and
+screenprint texture.

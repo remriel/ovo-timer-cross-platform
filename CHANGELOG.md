@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.11
+
+- Kept a visible one-degree seam on every incomplete duration lap so the first
+  circle closes only at 30:00 and the second closes only at exactly 60:00.
+- Removed the entire screensaver background feature, including its Settings
+  controls, animation runtime, persisted mode, CSS, and three generated PNGs.
+- Expanded the theme-only Settings screen to eight palettes: Dark, Light,
+  Cobalt Night, Acid Signal, Deep Ocean, Hot Ember, Night Forest, and
+  Monochrome.
+- Replaced the primary pink ring and shortcut blocks with orange. Pink is no
+  longer used in the interface palette.
+
 ## 1.0.10
 
 - Removed the two translucent wisp layers, including their blur, glow, and

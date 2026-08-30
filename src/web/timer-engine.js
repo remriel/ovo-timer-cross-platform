@@ -1,6 +1,7 @@
 export const MAX_SECONDS = 60 * 60;
 export const MIN_SECONDS = 10;
 export const DIAL_REVOLUTION_SECONDS = 30 * 60;
+const INCOMPLETE_LAP_MAX = 359 / 360;
 
 export function clamp(value, minimum, maximum) {
   return Math.min(Math.max(value, minimum), maximum);
@@ -62,11 +63,16 @@ export function timerProgress(totalSeconds, remainingSeconds, showRemaining) {
 }
 
 export function doubleLapProgress(seconds) {
-  const halfHour = 30 * 60;
-  const laps = clamp(normalizeSeconds(seconds) / halfHour, 0, 2);
+  const normalized = normalizeSeconds(seconds);
+  const firstLap = normalized / DIAL_REVOLUTION_SECONDS;
+  const secondLap = (normalized - DIAL_REVOLUTION_SECONDS) / DIAL_REVOLUTION_SECONDS;
 
   return {
-    outer: Math.min(laps, 1),
-    inner: clamp(laps - 1, 0, 1)
+    outer: normalized >= DIAL_REVOLUTION_SECONDS
+      ? 1
+      : Math.min(clamp(firstLap, 0, 1), INCOMPLETE_LAP_MAX),
+    inner: normalized >= MAX_SECONDS
+      ? 1
+      : Math.min(clamp(secondLap, 0, 1), INCOMPLETE_LAP_MAX)
   };
 }

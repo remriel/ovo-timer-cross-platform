@@ -11,10 +11,6 @@
   <body>
     <div class="poster-background" aria-hidden="true"></div>
     <main class="app-shell">
-      <div id="screensaverLayer" class="screensaver-layer" aria-hidden="true">
-        <img id="screensaverSprite" class="screensaver-sprite" src="./assets/screensaver-flowerbox.png" alt="" />
-      </div>
-
       <section id="timerScreen" class="app-screen timer-screen" aria-label="Countdown timer">
         <div class="timer-layout">
           <div class="timer-panel">
@@ -52,12 +48,12 @@
               <div class="preset-grid">
                 <button class="preset preset-blue" data-minutes="1" type="button">01<br /><span>MIN</span></button>
                 <button class="preset preset-yellow" data-minutes="2" type="button">02<br /><span>MIN</span></button>
-                <button class="preset preset-pink" data-minutes="3" type="button">03<br /><span>MIN</span></button>
+                <button class="preset preset-orange" data-minutes="3" type="button">03<br /><span>MIN</span></button>
                 <button class="preset preset-green" data-minutes="5" type="button">05<br /><span>MIN</span></button>
                 <button class="preset preset-red" data-minutes="10" type="button">10<br /><span>MIN</span></button>
                 <button class="preset preset-blue" data-minutes="15" type="button">15<br /><span>MIN</span></button>
                 <button class="preset preset-yellow" data-minutes="20" type="button">20<br /><span>MIN</span></button>
-                <button class="preset preset-pink" data-minutes="30" type="button">30<br /><span>MIN</span></button>
+                <button class="preset preset-orange" data-minutes="30" type="button">30<br /><span>MIN</span></button>
                 <button class="preset preset-red" data-minutes="45" type="button">45<br /><span>MIN</span></button>
               </div>
               <button id="settingsButton" class="settings-button" type="button" aria-label="Open settings">
@@ -79,46 +75,25 @@
         </div>
 
         <div class="settings-grid">
-          <section class="settings-section settings-section-wide" aria-labelledby="motionTitle">
-            <div class="settings-copy">
-              <p class="eyebrow">BACKGROUND MOTION</p>
-              <h2 id="motionTitle">PICK A SCREENSAVER.</h2>
-              <p>Choose what drifts behind the dial while your countdown runs.</p>
-            </div>
-            <div class="screensaver-options" role="group" aria-label="Background animation">
-              <button class="screensaver-option option-bezier" data-screensaver="bezier" type="button" aria-pressed="false">
-                <span class="option-art"><img src="./assets/screensaver-bezier.png" alt="" /></span>
-                <span class="option-label">BEZIER</span>
-                <span class="option-detail">LOOP + FLOW</span>
-              </button>
-              <button class="screensaver-option option-flowerbox" data-screensaver="flowerbox" type="button" aria-pressed="true">
-                <span class="option-art"><img src="./assets/screensaver-flowerbox.png" alt="" /></span>
-                <span class="option-label">FLOWERBOX</span>
-                <span class="option-detail">BOUNCE + BLOOM</span>
-              </button>
-              <button class="screensaver-option option-maze" data-screensaver="maze" type="button" aria-pressed="false">
-                <span class="option-art"><img src="./assets/screensaver-maze.png" alt="" /></span>
-                <span class="option-label">3D MAZE</span>
-                <span class="option-detail">TURN + DRIFT</span>
-              </button>
-            </div>
-          </section>
-
           <section class="settings-section appearance-section" aria-labelledby="appearanceTitle">
             <div class="settings-copy">
               <p class="eyebrow">APPEARANCE</p>
               <h2 id="appearanceTitle">CHOOSE A COLORWAY.</h2>
-              <p>Dark and light are included, plus two extra high-contrast palettes.</p>
+              <p>Eight bold palettes built for the timer.</p>
             </div>
             <div class="theme-options" role="group" aria-label="Color theme">
               <button class="theme-option theme-dark" data-theme-option="dark" type="button" aria-pressed="true">DARK MODE</button>
               <button class="theme-option theme-light" data-theme-option="light" type="button" aria-pressed="false">LIGHT MODE</button>
               <button class="theme-option theme-cobalt" data-theme-option="cobalt" type="button" aria-pressed="false">COBALT NIGHT</button>
-              <button class="theme-option theme-sunset" data-theme-option="sunset" type="button" aria-pressed="false">SUNSET INK</button>
+              <button class="theme-option theme-acid" data-theme-option="acid" type="button" aria-pressed="false">ACID SIGNAL</button>
+              <button class="theme-option theme-ocean" data-theme-option="ocean" type="button" aria-pressed="false">DEEP OCEAN</button>
+              <button class="theme-option theme-ember" data-theme-option="ember" type="button" aria-pressed="false">HOT EMBER</button>
+              <button class="theme-option theme-forest" data-theme-option="forest" type="button" aria-pressed="false">NIGHT FOREST</button>
+              <button class="theme-option theme-mono" data-theme-option="mono" type="button" aria-pressed="false">MONOCHROME</button>
             </div>
           </section>
         </div>
-        <p id="settingsStatus" class="settings-status" aria-live="polite">Flowerbox background selected. Dark mode selected.</p>
+        <p id="settingsStatus" class="settings-status" aria-live="polite">Dark mode selected.</p>
       </section>
     </main>
     <script src="./vendor/capacitor.js"></script>
