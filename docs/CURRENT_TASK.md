@@ -49,12 +49,12 @@ at an Android-sized viewport, and publish native Android version 1.0.10.
 
 ## Release state
 
-- [`v1.0.9`](https://github.com/remriel/ovo-timer-cross-platform/releases/tag/v1.0.9)
-  is the last published GitHub and Drive build.
-- Version 1.0.10 is pending its Android build, GitHub release, and Drive upload.
+- Published [`v1.0.10`](https://github.com/remriel/ovo-timer-cross-platform/releases/tag/v1.0.10)
+  with the corrected native Android APK and its SHA-256 checksum.
+- Uploaded the 1.0.10 APK to [Google Drive](https://drive.google.com/file/d/10sHp3MzoR1wEfmMTIB5xZFFuSTb6KNFb/view?usp=drivesdk);
+  Google reports it as owner-only by default.
 - Local artifacts are copied to the workspace `outputs/` folder:
-  `OvoTimer-Android-1.0.9-debug.apk`, `OvoTimer-Setup-1.0.9-x64.exe`,
-  `OvoTimer-Portable-1.0.9-x64.exe`, and `SHA256SUMS-1.0.9.txt`.
+  `OvoTimer-Android-1.0.10-debug.apk` and `SHA256SUMS-1.0.10.txt`.
 
 ## Previous release reference
 
@@ -70,10 +70,14 @@ at an Android-sized viewport, and publish native Android version 1.0.10.
 - Native emulator smoke testing remains unavailable because this machine has
   no Android device or configured AVD; build and asset sync completed.
 
-## Next steps
+## Final handoff
 
-1. Sync the corrected shared bundle into Android and build the 1.0.10 APK with
-   JDK 21.
-2. Copy and hash the APK, commit and push the source, publish GitHub release
-   v1.0.10, and upload the APK to Google Drive.
-3. Update this handoff with final artifact links and verification results.
+- Source commit: `f76416b`.
+- APK size: 21,828,352 bytes.
+- APK SHA-256:
+  `387B7F40966D2B4B246FC0EB9D16ADB78A56898394834B3949471926042EC78B`.
+- Drive file ID: `10sHp3MzoR1wEfmMTIB5xZFFuSTb6KNFb`.
+- GitHub release and Drive metadata were read back after publication.
+- No device or AVD was available for an on-device smoke pass; the automated
+  contract suite, Android-sized visual capture, native build, and packaged
+  asset inspection all passed.
