@@ -9,12 +9,12 @@ and is not affiliated with Ilumbo.
 ## Screenshots
 
 <p align="center">
-  <img src="docs/screenshots/ovo-idle.png" alt="Ovo Timer loaded at 60 minutes" width="31%" />
-  <img src="docs/screenshots/ovo-running.png" alt="Ovo Timer counting down" width="31%" />
-  <img src="docs/screenshots/ovo-paused.png" alt="Ovo Timer paused with time remaining" width="31%" />
+  <img src="docs/screenshots/ovo-idle.png" alt="Ovo Timer with both duration laps closed at exactly 60 minutes" width="31%" />
+  <img src="docs/screenshots/ovo-running.png" alt="Ovo Timer showing the final duration seam at 59 minutes 59 seconds" width="31%" />
+  <img src="docs/screenshots/ovo-paused.png" alt="Ovo Timer separate Settings screen with eight color themes" width="31%" />
 </p>
 
-<p align="center"><em>Idle · Running · Paused</em></p>
+<p align="center"><em>Exact 60:00 closure · Final seam · Eight colorways</em></p>
 
 ## What it does
 

@@ -51,7 +51,23 @@ Settings to eight mostly pink-free color schemes for native Android 1.0.11.
   is the last published GitHub and Drive build.
 - Local artifacts are in the workspace `outputs/` folder:
   `OvoTimer-Android-1.0.11-debug.apk` and `SHA256SUMS-1.0.11.txt`.
-- Version 1.0.11 is pending GitHub publication and Drive upload.
+- Published [`v1.0.11`](https://github.com/remriel/ovo-timer-cross-platform/releases/tag/v1.0.11)
+  with the APK and checksum; GitHub reports the same SHA-256 digest.
+- Uploaded the APK to [Google Drive](https://drive.google.com/file/d/1zfgjdkXQr2rPE7ufjUIyLvled15TaS09/view?usp=drivesdk).
+  Drive metadata confirms the name, MIME type, and 16,007,340-byte size; it is
+  owner-only by default.
+- Updated the README gallery with the final Android-sized 60:00, 59:59, and
+  eight-theme Settings captures so the public project page matches the APK.
+
+## Final handoff
+
+- Source commit: `720332e` plus the final release-metadata/gallery commit.
+- GitHub release: `v1.0.11`.
+- Drive file ID: `1zfgjdkXQr2rPE7ufjUIyLvled15TaS09`.
+- Native emulator smoke testing remains unavailable because this machine has
+  no Android device or configured AVD; automated checks, Android-sized visual
+  captures, native build, packaged-asset inspection, GitHub digest readback,
+  and Drive metadata readback all passed.
 
 ## Previous release reference
 
