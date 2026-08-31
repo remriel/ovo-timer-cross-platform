@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.12
+
+- Removed the permanently filled orange dial border that visually imitated a
+  second progress lap and made the timer appear maxed out at 30 minutes.
+- Positioned the first duration ring closest to the red time bar; it fills from
+  0 to 30 minutes.
+- Added a separately rendered outermost duration ring that starts at 30:00,
+  reaches halfway at 45:00, and closes only at exactly 60:00.
+
 ## 1.0.11
 
 - Kept a visible one-degree seam on every incomplete duration lap so the first

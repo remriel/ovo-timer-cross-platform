@@ -333,7 +333,7 @@ html.native-android .timer-dial {
 
 .selection-trace {
   position: absolute;
-  z-index: 1;
+  z-index: 3;
   display: block;
   border-radius: 50%;
   pointer-events: none;
@@ -353,12 +353,14 @@ html.native-android .timer-dial {
 
 .selection-trace-outer {
   --trace: var(--trace-outer);
-  inset: -24px;
+  /* Lap one sits closest to the red time bar and completes at 30:00. */
+  inset: -16px;
 }
 
 .selection-trace-inner {
   --trace: var(--trace-inner);
-  inset: -12px;
+  /* Lap two is the outermost ring and fills only from 30:00 to 60:00. */
+  inset: -26px;
 }
 
 .timer-dial {
@@ -396,7 +398,7 @@ html.native-android .timer-dial {
   border: 5px solid var(--ink);
   border-radius: 50%;
   background: conic-gradient(from 0deg, var(--red) var(--progress), var(--paper) 0);
-  box-shadow: 0 0 0 10px var(--ink), 0 0 0 16px var(--orange);
+  box-shadow: 0 0 0 10px var(--ink);
   place-items: center;
   transition: transform 130ms ease;
 }

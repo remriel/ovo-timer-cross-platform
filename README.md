@@ -9,20 +9,21 @@ and is not affiliated with Ilumbo.
 ## Screenshots
 
 <p align="center">
-  <img src="docs/screenshots/ovo-idle.png" alt="Ovo Timer with both duration laps closed at exactly 60 minutes" width="31%" />
-  <img src="docs/screenshots/ovo-running.png" alt="Ovo Timer showing the final duration seam at 59 minutes 59 seconds" width="31%" />
-  <img src="docs/screenshots/ovo-paused.png" alt="Ovo Timer separate Settings screen with eight color themes" width="31%" />
+  <img src="docs/screenshots/ovo-idle.png" alt="Ovo Timer at 30 minutes with only the first duration ring complete" width="31%" />
+  <img src="docs/screenshots/ovo-running.png" alt="Ovo Timer at 45 minutes with the outermost duration ring halfway complete" width="31%" />
+  <img src="docs/screenshots/ovo-paused.png" alt="Ovo Timer at 60 minutes with both duration rings complete" width="31%" />
 </p>
 
-<p align="center"><em>Exact 60:00 closure · Final seam · Eight colorways</em></p>
+<p align="center"><em>30:00 first ring · 45:00 outer ring halfway · 60:00 both complete</em></p>
 
 ## What it does
 
 - Set a countdown from 10 seconds to 60 minutes by dragging the visible
   colored progress band around the clock.
-- Follow a two-lap duration trace around the dial: 30 minutes fills the first
-  orbit, 60 minutes fills both, and each orbit keeps a visible final seam until
-  its exact 30:00 or 60:00 boundary. The trace empties with the remaining time.
+- Follow two independently rendered duration rings around the dial. The inner
+  ring fills from 0 to 30 minutes. The outermost ring starts at 30:00, reaches
+  halfway at 45:00, and closes at 60:00. Each ring keeps a final seam until its
+  exact boundary, and both empty with the remaining time.
 - Tap the inner clock face to start or pause. Releasing a progress-band drag
   starts the newly selected countdown; Space pauses/resumes and R resets.
 - Choose 1, 2, 3, 5, 10, 15, 20, 30, or 45-minute presets from a compact

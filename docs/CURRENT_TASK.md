@@ -2,12 +2,19 @@
 
 ## Objective
 
-Make the two duration traces close only at their exact 30:00 and 60:00
-boundaries, remove the screensaver background feature completely, and expand
-Settings to eight mostly pink-free color schemes for native Android 1.0.11.
+Correct the Android-visible two-lap indicator so one ring fills from 0–30
+minutes and a separate outermost ring fills from 30–60 minutes, then publish
+the corrected native Android build as version 1.0.12.
 
 ## Implementation state
 
+- Found the visual bug missed by the 1.0.11 math test: a permanently filled
+  orange `box-shadow` looked like the second lap while the actual second trace
+  was layered beneath the timer.
+- Removed that decorative color ring, raised both real traces above the dial,
+  placed lap one nearest the red time bar, and placed lap two outside it.
+- At 30:00 only lap one is full; at 45:00 the outermost lap is half full; at
+  60:00 both are full.
 - Removed the screensaver layer, all three selectors, animation state and frame
   loop, persisted mode, CSS, documentation, tests, and generated artwork.
 - Settings now contains eight persistent theme choices: Dark, Light, Cobalt,
@@ -26,6 +33,19 @@ Settings to eight mostly pink-free color schemes for native Android 1.0.11.
 
 ## Verification
 
+- Android-sized visual captures for the corrected sequence:
+  `output/playwright/android-v1.0.12-laps-3000.png`,
+  `android-v1.0.12-laps-4500.png`, and `android-v1.0.12-laps-6000.png`.
+- The browser console reported zero errors and warnings during this sequence.
+- The UI contract now rejects a permanently filled orange ring and verifies
+  the two independently positioned trace layers.
+- `npm run check`: 16/16 tests passed for version 1.0.12.
+- `npm run android:apk`: successful with JDK 21. The packaged CSS was read back
+  from the APK and confirms both lap positions, foreground layering, and the
+  absence of the old orange ring.
+- APK size: 16,007,432 bytes.
+- APK SHA-256:
+  `B8A21D269819A6BD7C597B9E6999ECE5787984B400D096478E4317BD5D4157CF`.
 - `npm run check`: 16/16 tests passed. Regression coverage includes incomplete
   29:59 and 59:59 laps, exact 30:00 and 60:00 closure, eight themes, no
   screensaver runtime, and no pink interface token.
@@ -47,6 +67,9 @@ Settings to eight mostly pink-free color schemes for native Android 1.0.11.
 
 ## Release state
 
+- Local artifacts are in the workspace `outputs/` folder:
+  `OvoTimer-Android-1.0.12-debug.apk` and `SHA256SUMS-1.0.12.txt`.
+- Version 1.0.12 is pending GitHub publication and Google Drive upload.
 - [`v1.0.10`](https://github.com/remriel/ovo-timer-cross-platform/releases/tag/v1.0.10)
   is the last published GitHub and Drive build.
 - Local artifacts are in the workspace `outputs/` folder:
